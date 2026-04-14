@@ -1,7 +1,7 @@
 <div align="center">
 <img src="./assets/images/LOGO.png" width="150px">
 
-# Ouroboros - A continual learning paradigma.
+# Ouroboros - A continual learning example.
 
 ---
 
