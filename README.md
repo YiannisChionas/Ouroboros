@@ -1,5 +1,5 @@
 <div align="center">
-<img src="./assets/images/LOGO.png" width="100px">
+<img src="./assets/images/LOGO.png" width="150px">
 
 # Ouroboros - A continual learning paradigma.
 
@@ -87,13 +87,13 @@ cd ouroboros
   #### Create env
   To create a new environment check out the repository and type: 
   ```
-  conda env create --file environment.yml --name FACIL
+  conda env create --file environment.yml --name ouroboros
   ```
   *Notice:* set the appropriate version of your CUDA driver for `cudatoolkit` in `environment.yml`.
 
   #### Environment activation/deactivation
   ```
-  conda activate FACIL
+  conda activate ouroboros
   conda deactivate
   ```
 
@@ -137,7 +137,7 @@ If you want to cite the framework feel free to use this preprint citation while 
 
 ---
 
-The basis of FACIL is made possible thanks to [Chionas Yiannis](https://github.com/yiannischionas) but most imporantly the fareworks that inspired it:
+The basis of Ouroboros is made possible thanks to the efford of [Chionas Ιοannis](https://github.com/yiannischionas) but most imporantly the frameworks that inspired it:
 FACIL
 PYCIL
 Feel free to contribute or propose new features by opening an issue!
