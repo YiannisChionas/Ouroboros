@@ -1,5 +1,5 @@
 <div align="center">
-<img src="./docs/_static/facil_logo.png" width="100px">
+<img src="./assets/images/LOGO.png" width="100px">
 
 # Ouroboros - A continual learning paradigma.
 
