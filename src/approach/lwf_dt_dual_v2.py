@@ -2,7 +2,7 @@ import torch
 import torch.nn.functional as F
 from copy import deepcopy
 
-from .incremental_learning_v3 import Incremental_Learning_Approach
+from .incremental_learning import Incremental_Learning_Approach
 from datasets.exemplars_dataset import ExemplarsDataset
 
 
@@ -23,8 +23,9 @@ class Appr(Incremental_Learning_Approach):
     def __init__(self, args, model, logger=None, exemplars_dataset=None):
         super().__init__(args, model, logger, exemplars_dataset)
         self.model_old = None
-        self.lamb = args.get('lamb', 1.0)
-        self.T    = args.get('T', 2)
+        aargs = args.get('approach_args', {})
+        self.lamb = aargs.get('lamb', 1.0)
+        self.T    = aargs.get('T', 2)
 
     @staticmethod
     def exemplars_dataset_class():

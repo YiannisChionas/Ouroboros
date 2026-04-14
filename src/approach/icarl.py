@@ -5,7 +5,7 @@ import numpy as np
 from copy import deepcopy
 from torch.utils.data import DataLoader
 
-from .incremental_learning_v3 import Incremental_Learning_Approach
+from .incremental_learning import Incremental_Learning_Approach
 from datasets.exemplars_dataset import ExemplarsDataset
 from datasets.exemplars_selection import override_dataset_transform
 

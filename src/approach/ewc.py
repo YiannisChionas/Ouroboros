@@ -3,7 +3,7 @@ import warnings
 import torch
 import itertools
 
-from .incremental_learning_v3 import Incremental_Learning_Approach
+from .incremental_learning import Incremental_Learning_Approach
 from datasets.exemplars_dataset import ExemplarsDataset
 
 
@@ -14,10 +14,11 @@ class Appr(Incremental_Learning_Approach):
 
     def __init__(self, args, model, logger=None, exemplars_dataset=None):
         super().__init__(args, model, logger, exemplars_dataset)
-        self.lamb = args.get('lamb', 5000)
-        self.alpha = args.get('alpha', 0.5)
-        self.sampling_type = args.get('fi_sampling_type', 'max_pred')
-        self.num_samples = args.get('fi_num_samples', -1)
+        aargs = args.get('approach_args', {})
+        self.lamb = aargs.get('lamb', 5000)
+        self.alpha = aargs.get('alpha', 0.5)
+        self.sampling_type = aargs.get('fi_sampling_type', 'max_pred')
+        self.num_samples = aargs.get('fi_num_samples', -1)
 
         # Importance weights are kept only for the backbone, not the heads
         feat_ext = self.model.model

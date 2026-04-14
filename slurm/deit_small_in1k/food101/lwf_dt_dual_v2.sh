@@ -4,13 +4,13 @@
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=4
 #SBATCH --time=05:00:00
-#SBATCH --output=/home/it219111/experiments/FACILCUSTOM/logs/%x/%x-%j.out
-#SBATCH --error=/home/it219111/experiments/FACILCUSTOM/logs/%x/%x-%j.err
+#SBATCH --output=/home/it219111/experiments/Ouroboros/logs/%x/%x-%j.out
+#SBATCH --error=/home/it219111/experiments/Ouroboros/logs/%x/%x-%j.err
 
 set -euo pipefail
 
 BASE_DIR="/home/it219111"
-PROJECT_DIR="${BASE_DIR}/git/FACILCUSTOM"
+PROJECT_DIR="${BASE_DIR}/git/Ouroboros"
 CONDA_ENV="test_env"
 CONFIG="${PROJECT_DIR}/configs/deit_small_in1k/food101/lwf_dt_dual_v2.json"
 
@@ -19,7 +19,7 @@ conda activate "$CONDA_ENV"
 
 echo "START_TASK=$START_TASK STOP_TASK=$STOP_TASK"
 
-python -u "${PROJECT_DIR}/src/main_incremental_v6.py" \
+python -u "${PROJECT_DIR}/src/main_incremental.py" \
   --config "$CONFIG" \
   --start-at-task "$START_TASK" \
   --stop-at-task  "$STOP_TASK"

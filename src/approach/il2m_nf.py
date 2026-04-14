@@ -1,3 +1,6 @@
+# NOTE: This approach has not yet been ported to the current framework interface and is non-functional.
+# It is kept for reference. Do not use with the current trainer.
+
 import torch
 import numpy as np
 

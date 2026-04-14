@@ -3,7 +3,7 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader, Dataset
 
-from .incremental_learning_v3 import Incremental_Learning_Approach
+from .incremental_learning import Incremental_Learning_Approach
 
 # Joint training baseline — upper bound for continual learning.
 # Trains on the union of all datasets seen so far at each task.

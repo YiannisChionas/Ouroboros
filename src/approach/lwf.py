@@ -1,7 +1,7 @@
 import torch
 from copy import deepcopy
 
-from .incremental_learning_v3 import Incremental_Learning_Approach
+from .incremental_learning import Incremental_Learning_Approach
 from datasets.exemplars_dataset import ExemplarsDataset
 
 

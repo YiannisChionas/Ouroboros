@@ -29,10 +29,11 @@
     "fix_bn": false,
     "freeze_backbone": false,
     "eval_on_train": false,
-    "all_outputs": false,
     "normalize": "in1k",
     "resize": 224,
     "crop": 224,
-    "lamb": 1.0,
-    "T": 2
+    "approach_args": {
+        "lamb": 1.0,
+        "T": 2
+    }
 }

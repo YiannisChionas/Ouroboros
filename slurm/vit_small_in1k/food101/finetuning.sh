@@ -4,13 +4,13 @@
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=4
 #SBATCH --time=02:00:00
-#SBATCH --output=/home/it219111/experiments/FACILCUSTOM/logs/%x/%x-%j.out
-#SBATCH --error=/home/it219111/experiments/FACILCUSTOM/logs/%x/%x-%j.err
+#SBATCH --output=/home/it219111/experiments/Ouroboros/logs/%x/%x-%j.out
+#SBATCH --error=/home/it219111/experiments/Ouroboros/logs/%x/%x-%j.err
 
 set -euo pipefail
 
 BASE_DIR="/home/it219111"
-PROJECT_DIR="${BASE_DIR}/git/FACILCUSTOM"
+PROJECT_DIR="${BASE_DIR}/git/Ouroboros"
 CONDA_ENV="test_env"
 CONFIG="${PROJECT_DIR}/configs/vit_small_in1k/food101/finetuning.json"
 

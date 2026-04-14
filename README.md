@@ -23,16 +23,16 @@
 Ouroboros started as code for the paper:  
 _**Continual learning with pretrained models**_  
 *Chionas Ioannis*  
-([Platform](https://link-to-paper))
+<!-- TODO: add paper link -->
 
-It was build upon the existing Framework for Analysis of Class Increamental Learning (FACIL) and was heavily inspired by PYCIL.
-It combines the logic of the two frameworks, ulilizing Task Increamental Learning support using FACIL's head removal approach and the more 
-up to date PYCIL trainer + Config logic. Reproducing the paper's experiments is supported plus adding/ suggesting new methods is more than welcome.
-Expanding and building upon existing foundation is crucial for the development of science so feel free to use any part of this framework you find usefull.
-If you do so please take the time to cite the framework: citing notes
+It was built upon the existing Framework for Analysis of Class-Incremental Learning (FACIL) and was heavily inspired by PyCIL.
+It combines the logic of the two frameworks, utilizing Task-Incremental Learning support using FACIL's head management approach and the more 
+up-to-date PyCIL trainer and config logic. Reproducing the paper's experiments is supported and adding or suggesting new methods is more than welcome.
+Expanding and building upon existing work is crucial for the development of science, so feel free to use any part of this framework you find useful.
+If you do so, please take the time to cite the framework.
 
 ## Key Features
-This framework by deafault supports both task and class increamental learning due to the list of heads FACIL logic.
+This framework by default supports both task and class-incremental learning due to the list-of-heads FACIL logic.
 
 | Setting                                                                             | task-ID at train time | task-ID at test time | # of tasks |
 | ----------------------------------------------------------------------------------- | --------------------- | -------------------- | ---------- |
@@ -44,20 +44,20 @@ Current available approaches include:
 <div align="center">
 <p align="center"><b>
   • Finetuning
-  • Freezing
+  • Freezing <!-- TODO: port to current interface -->
   • Joint
   • LwF
   • iCaRL
   • EWC
-  • PathInt
-  • MAS
-  • RWalk
-  • EEIL
-  • LwM
-  • DMC
+  • PathInt <!-- TODO: port to current interface -->
+  • MAS <!-- TODO: port to current interface -->
+  • RWalk <!-- TODO: port to current interface -->
+  • EEIL <!-- TODO: port to current interface -->
+  • LwM <!-- TODO: port to current interface -->
+  • DMC <!-- TODO: port to current interface -->
   • BiC
-  • LUCIR
-  • IL2M
+  • LUCIR <!-- TODO: port to current interface -->
+  • IL2M <!-- TODO: port to current interface -->
   • SimpleCIL
   • LWF-DT
   • LWF-DT-COS
@@ -73,6 +73,8 @@ cd ouroboros
 
 <details>
   <summary>Optionally, create an environment to run the code (click to expand).</summary>
+
+  <!-- TODO: add requirements.txt and environment.yml -->
 
   ### Using a requirements file
   The library requirements of the code are detailed in [requirements.txt](requirements.txt). You can install them
@@ -107,6 +109,7 @@ More options are explained in the [`src`](./src), including GridSearch usage. Al
 loggers, datasets and networks.
 
 ### Scripts
+<!-- TODO: add scripts folder with reproduction scripts -->
 We provide scripts to reproduce the specific scenarios proposed in 
 _**Class-incremental learning: survey and performance evaluation**_:
 
@@ -137,7 +140,6 @@ If you want to cite the framework feel free to use this preprint citation while 
 
 ---
 
-The basis of Ouroboros is made possible thanks to the efford of [Chionas Ιοannis](https://github.com/yiannischionas) but most imporantly the frameworks that inspired it:
-FACIL
-PYCIL
+The basis of Ouroboros is made possible thanks to the effort of [Chionas Ioannis](https://github.com/yiannischionas) but most importantly the frameworks that inspired it:
+FACIL and PyCIL.
 Feel free to contribute or propose new features by opening an issue!
