@@ -1,0 +1,12 @@
+data/*
+logs/*
+results/*
+docs/*
+src/networks/pretrained_weights/*
+src/approach/__pycache__/*
+src/datasets/__pycache__/*
+src/loggers/__pycache__/*
+src/networks/__pycache__/*
+src/__pycache__/*
+src/data/*
+src/trainers/__pycache__/*
