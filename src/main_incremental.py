@@ -16,6 +16,7 @@ def main():
 def build_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', type=str, required=True)
+    # Useful for checkpoint management
     parser.add_argument('--start-at-task', type=int, default=None, dest='start_at_task')
     parser.add_argument('--stop-at-task',  type=int, default=None, dest='stop_at_task')
     parser.add_argument('--start-epoch',   type=int, default=None, dest='start_epoch')
