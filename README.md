@@ -1,5 +1,5 @@
 <div align="center">
-<img src="./assets/images/LOGO.png" width="150px">
+<img src="./assets/images/Banner.png" width="800px">
 
 # Ouroboros - A continual learning example.
 
