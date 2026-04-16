@@ -52,7 +52,8 @@ Current available approaches include:
   • PathInt <!-- TODO: port to current interface -->
   • MAS <!-- TODO: port to current interface -->
   • RWalk <!-- TODO: port to current interface -->
-  • EEIL <!-- TODO: port to current interface -->
+  • EEIL
+  • WA
   • LwM <!-- TODO: port to current interface -->
   • DMC <!-- TODO: port to current interface -->
   • BiC
@@ -126,15 +127,7 @@ Please check the MIT license that is listed in this repository.
 ## Cite
 If you want to cite the framework feel free to use this preprint citation while we await publication:
 ```bibtex
-@article{masana2022class,
-  title={Class-Incremental Learning: Survey and Performance Evaluation on Image Classification},
-  author={Masana, Marc and Liu, Xialei and Twardowski, Bartłomiej and Menta, Mikel and Bagdanov, Andrew D. and van de Weijer, Joost},
-  journal={IEEE Transactions on Pattern Analysis and Machine Intelligence},
-  doi={10.1109/TPAMI.2022.3213473},
-  year={2023},
-  volume={45},
-  number={5},
-  pages={5513-5533}}
+@article{info
 }
 ```
 
