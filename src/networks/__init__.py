@@ -17,7 +17,7 @@ allmodels = tvmodels + timmmodels + ['deit_small_distilled_patch16_224_cil', 'de
 
 def set_model_head_var(model):
     # ResNet
-    elif type(model) == tv_models.ResNet:
+    if type(model) == tv_models.ResNet:
         model.head_var = 'fc'
     elif type(model) == timm_models.resnet.ResNet:
         model.head_var = 'fc'
