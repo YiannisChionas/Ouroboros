@@ -44,15 +44,18 @@ def train(args):
     utils.seed_everything(seed=args['seed'])
 
     if torch.cuda.is_available():
-        torch.cuda.set_device(args['gpus'][0])
-        args['device'] = f"cuda:{args['gpus'][0]}"
+        torch.cuda.set_device(0)
+        args['device'] = 'cuda:0'
     else:
         print('WARNING: [CUDA unavailable] Using CPU instead!')
         args['device'] = 'cpu'
 
-    multi_gpu = torch.cuda.is_available() and len(args['gpus']) > 1
+    # gpus in config = how many GPUs to use; SLURM assigns physical GPUs via CUDA_VISIBLE_DEVICES
+    # DataParallel always uses 0..n-1 (visible device indices)
+    n_gpus = len(args['gpus'])
+    multi_gpu = torch.cuda.is_available() and n_gpus > 1
     if multi_gpu:
-        print(f"Multi-GPU mode: DataParallel on GPUs {args['gpus']}")
+        print(f"Multi-GPU mode: DataParallel on {n_gpus} GPUs (CUDA_VISIBLE_DEVICES={torch.cuda.device_count()} available)")
 
     if args['network'] in tvmodels:
         tvnet = getattr(importlib.import_module(name='torchvision.models'), args['network'])
@@ -146,7 +149,7 @@ def train(args):
                   validation_loader=validation_loader,
                   start_epoch=start_epoch,
                   stop_epoch=stop_epoch,
-                  gpu_ids=args['gpus'] if multi_gpu else None)
+                  gpu_ids=list(range(n_gpus)) if multi_gpu else None)
 
         # Eval + save metrics only when all epochs for this task are done
         if is_last_epoch_job:
