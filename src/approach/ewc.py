@@ -57,8 +57,9 @@ class Appr(Incremental_Learning_Approach):
         """Store current parameters and update Fisher information after each task."""
 
         # Store current parameters for the next task
+        backbone = getattr(self.model.model, 'module', self.model.model)
         self.older_params = {n: p.clone().detach().to(self.device)
-                             for n, p in self.model.model.named_parameters() if p.requires_grad}
+                             for n, p in backbone.named_parameters() if p.requires_grad}
 
         # Compute and merge Fisher information
         curr_fisher = self.compute_fisher_matrix_diag(trn_loader)
@@ -72,8 +73,9 @@ class Appr(Incremental_Learning_Approach):
 
     def compute_fisher_matrix_diag(self, trn_loader):
         """Compute diagonal Fisher information matrix via gradient accumulation."""
+        backbone = getattr(self.model.model, 'module', self.model.model)
         fisher = {n: torch.zeros(p.shape).to(self.device)
-                  for n, p in self.model.model.named_parameters() if p.requires_grad}
+                  for n, p in backbone.named_parameters() if p.requires_grad}
         n_samples_batches = (self.num_samples // trn_loader.batch_size + 1) if self.num_samples > 0 \
             else (len(trn_loader.dataset) // trn_loader.batch_size)
         self.model.train()
@@ -91,7 +93,7 @@ class Appr(Incremental_Learning_Approach):
             loss = torch.nn.functional.cross_entropy(torch.cat(outputs, dim=1), preds)
             self.optimizer.zero_grad()
             loss.backward()
-            for n, p in self.model.model.named_parameters():
+            for n, p in backbone.named_parameters():
                 if p.grad is not None:
                     fisher[n] += p.grad.pow(2) * len(targets)
 
@@ -104,7 +106,8 @@ class Appr(Incremental_Learning_Approach):
         loss = 0
         if t > 0:
             loss_reg = 0
-            for n, p in self.model.model.named_parameters():
+            backbone = getattr(self.model.model, 'module', self.model.model)
+            for n, p in backbone.named_parameters():
                 if n in self.fisher.keys():
                     loss_reg += torch.sum(self.fisher[n] * (p - self.older_params[n]).pow(2)) / 2
             loss += self.lamb * loss_reg

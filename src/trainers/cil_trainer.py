@@ -44,11 +44,15 @@ def train(args):
     utils.seed_everything(seed=args['seed'])
 
     if torch.cuda.is_available():
-        torch.cuda.set_device(args['gpu'])
-        args['device'] = 'cuda'
+        torch.cuda.set_device(args['gpus'][0])
+        args['device'] = f"cuda:{args['gpus'][0]}"
     else:
         print('WARNING: [CUDA unavailable] Using CPU instead!')
         args['device'] = 'cpu'
+
+    multi_gpu = torch.cuda.is_available() and len(args['gpus']) > 1
+    if multi_gpu:
+        print(f"Multi-GPU mode: DataParallel on GPUs {args['gpus']}")
 
     if args['network'] in tvmodels:
         tvnet = getattr(importlib.import_module(name='torchvision.models'), args['network'])
@@ -141,7 +145,8 @@ def train(args):
                   train_loader=train_loader,
                   validation_loader=validation_loader,
                   start_epoch=start_epoch,
-                  stop_epoch=stop_epoch)
+                  stop_epoch=stop_epoch,
+                  gpu_ids=args['gpus'] if multi_gpu else None)
 
         # Eval + save metrics only when all epochs for this task are done
         if is_last_epoch_job:
@@ -188,7 +193,7 @@ def _load_metrics_matrix(T, prefix, path, start_t):
 # ------------------------------------------------------------------
 
 def _run_task(task, classes_per_task, network, device, approach, train_loader, validation_loader,
-              start_epoch=0, stop_epoch=0):
+              start_epoch=0, stop_epoch=0, gpu_ids=None):
     _, ncla = classes_per_task[task]
 
     print('*' * 108)
@@ -199,8 +204,17 @@ def _run_task(task, classes_per_task, network, device, approach, train_loader, v
         network.add_head(ncla)
         network.to(device)
 
+    # Wrap backbone only (not LLL_Net) so heads/task_offset/task_cls remain directly accessible
+    if gpu_ids is not None:
+        network.model = torch.nn.DataParallel(network.model, device_ids=gpu_ids)
+
     approach.train(task, train_loader[task], validation_loader[task],
                    start_epoch=start_epoch, stop_epoch=stop_epoch)
+
+    # Unwrap — external checkpoints are always saved on the unwrapped model
+    if gpu_ids is not None:
+        network.model = network.model.module
+
     print('-' * 108)
 
 def _eval_task(task, approach, test_loader, logger, metrics):
@@ -264,6 +278,10 @@ def _save_metrics(task, results_path, logger, metrics, classes_per_task, network
 
 def _set_defaults(args: dict) -> None:
     args.setdefault('gpu', 0)
+    # gpus: list of GPU ids. If not set, derive from scalar 'gpu'.
+    if 'gpus' not in args:
+        g = args['gpu']
+        args['gpus'] = g if isinstance(g, list) else [g]
     args.setdefault('results_path', './results')
     args.setdefault('experiment_path', None)
     args.setdefault('seed', 0)

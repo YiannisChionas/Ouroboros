@@ -77,7 +77,7 @@ class Appr(Incremental_Learning_Approach):
             return
 
         # Restore pretrained backbone — no training history
-        self.model.model.load_state_dict(deepcopy(self.pretrained_state))
+        getattr(self.model.model, 'module', self.model.model).load_state_dict(deepcopy(self.pretrained_state))
         # Reset all heads to fresh random init
         for h in self.model.heads:
             h.reset_parameters()
