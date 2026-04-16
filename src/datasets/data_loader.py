@@ -7,8 +7,8 @@ from torchvision.datasets import CIFAR100 as TorchVisionCIFAR100
 from torchvision.datasets import SVHN as TorchVisionSVHN
 from torchvision.transforms import InterpolationMode
 
-from . import base_dataset_v2 as basedat
-from . import memory_dataset_v2 as memd
+from . import base_dataset as basedat
+from . import memory_dataset as memd
 
 _NORMALIZE_PRESETS = {
     'in1k':  ((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
