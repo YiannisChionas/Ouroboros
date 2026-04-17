@@ -158,7 +158,7 @@ def train(args):
     if is_last_epoch_job:
         _save_metrics(task=task, results_path=args['results_path'], logger=logger, metrics=metrics,
                       classes_per_task=classes_per_task, network=net)
-        if task == total_tasks - 1:
+        if task == total_tasks - 1 and args['last_layer_analysis']:
             heads_dist = net.heads_dist if isinstance(net, LLL_Net_Distilled) else None
             figs = last_layer_analysis(net.heads, heads_dist, task, classes_per_task, y_lim=True)
             if len(figs) == 4:
@@ -333,6 +333,7 @@ def _set_defaults(args: dict) -> None:
     args.setdefault('fix_bn', False)
     args.setdefault('freeze_backbone', False)
     args.setdefault('eval_on_train', False)
+    args.setdefault('last_layer_analysis', False)
     args.setdefault('approach_args', {})
     args.setdefault('exemplars_args', {})
 
