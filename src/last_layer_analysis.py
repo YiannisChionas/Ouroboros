@@ -61,7 +61,7 @@ def last_layer_analysis(heads, heads_dist, last_task_index, classes_per_task, y_
         ax.set_ylim(-1.0, 1.0)
     ax.legend(loc='upper left', fontsize='11') #, fontfamily='serif')
 
-    if weights_dist:
+    if weights_dist and len(weights_dist) > 0:
 
         # Figure weights_dist
         f_weights_dist = plt.figure(dpi=300)

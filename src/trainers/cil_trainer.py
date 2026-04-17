@@ -13,6 +13,7 @@ from networks.network import LLL_Net
 from networks.distil_network import LLL_Net_Distilled
 from approach.incremental_learning import Incremental_Learning_Approach
 from networks import tvmodels, timmmodels, set_model_head_var
+from last_layer_analysis import last_layer_analysis
 
 
 def train(args):
@@ -44,11 +45,17 @@ def train(args):
     utils.seed_everything(seed=args['seed'])
 
     if torch.cuda.is_available():
-        torch.cuda.set_device(args['gpu'])
-        args['device'] = 'cuda'
+        torch.cuda.set_device(0)
+        args['device'] = 'cuda:0'
     else:
         print('WARNING: [CUDA unavailable] Using CPU instead!')
         args['device'] = 'cpu'
+
+    # gpus in config = how many GPUs to use; SLURM assigns physical GPUs via CUDA_VISIBLE_DEVICES
+    n_gpus = len(args['gpus'])
+    multi_gpu = torch.cuda.is_available() and n_gpus > 1
+    if multi_gpu:
+        print(f"Multi-GPU mode: DataParallel on {n_gpus} GPUs (CUDA_VISIBLE_DEVICES={torch.cuda.device_count()} available)")
 
     if args['network'] in tvmodels:
         tvnet = getattr(importlib.import_module(name='torchvision.models'), args['network'])
@@ -141,7 +148,8 @@ def train(args):
                   train_loader=train_loader,
                   validation_loader=validation_loader,
                   start_epoch=start_epoch,
-                  stop_epoch=stop_epoch)
+                  stop_epoch=stop_epoch,
+                  gpu_ids=list(range(n_gpus)) if multi_gpu else None)
 
         # Eval + save metrics only when all epochs for this task are done
         if is_last_epoch_job:
@@ -150,6 +158,17 @@ def train(args):
     if is_last_epoch_job:
         _save_metrics(task=task, results_path=args['results_path'], logger=logger, metrics=metrics,
                       classes_per_task=classes_per_task, network=net)
+        if task == total_tasks - 1:
+            heads_dist = net.heads_dist if isinstance(net, LLL_Net_Distilled) else None
+            figs = last_layer_analysis(net.heads, heads_dist, task, classes_per_task, y_lim=True)
+            if len(figs) == 4:
+                f_w, f_b, f_wd, f_bd = figs
+                logger.log_figure(name='weights_dist', iter=task, figure=f_wd)
+                logger.log_figure(name='bias_dist',    iter=task, figure=f_bd)
+            else:
+                f_w, f_b = figs
+            logger.log_figure(name='weights_cls', iter=task, figure=f_w)
+            logger.log_figure(name='bias_cls',    iter=task, figure=f_b)
 
     appr.save_progress(logger.exp_path, task)
 
@@ -188,7 +207,7 @@ def _load_metrics_matrix(T, prefix, path, start_t):
 # ------------------------------------------------------------------
 
 def _run_task(task, classes_per_task, network, device, approach, train_loader, validation_loader,
-              start_epoch=0, stop_epoch=0):
+              start_epoch=0, stop_epoch=0, gpu_ids=None):
     _, ncla = classes_per_task[task]
 
     print('*' * 108)
@@ -199,8 +218,17 @@ def _run_task(task, classes_per_task, network, device, approach, train_loader, v
         network.add_head(ncla)
         network.to(device)
 
+    # Wrap backbone only (not LLL_Net) so heads/task_offset/task_cls remain directly accessible
+    if gpu_ids is not None:
+        network.model = torch.nn.DataParallel(network.model, device_ids=gpu_ids)
+
     approach.train(task, train_loader[task], validation_loader[task],
                    start_epoch=start_epoch, stop_epoch=stop_epoch)
+
+    # Unwrap — external checkpoints are always saved on the unwrapped model
+    if gpu_ids is not None:
+        network.model = network.model.module
+
     print('-' * 108)
 
 def _eval_task(task, approach, test_loader, logger, metrics):
@@ -264,6 +292,10 @@ def _save_metrics(task, results_path, logger, metrics, classes_per_task, network
 
 def _set_defaults(args: dict) -> None:
     args.setdefault('gpu', 0)
+    # gpus: list of GPU ids. If not set, derive from scalar 'gpu'.
+    if 'gpus' not in args:
+        g = args['gpu']
+        args['gpus'] = g if isinstance(g, list) else [g]
     args.setdefault('results_path', './results')
     args.setdefault('experiment_path', None)
     args.setdefault('seed', 0)
