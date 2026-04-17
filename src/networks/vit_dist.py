@@ -111,6 +111,7 @@ def vit_small_patch16_224_dist(pretrained=False, **kwargs):
         'vit_small_patch16_224.augreg_in1k',
         pretrained=pretrained,
         pretrained_filter_fn=checkpoint_filter_fn_vit_dist,
+        pretrained_strict=False,  # dist_token not in ViT checkpoint, stays randomly initialized
         **dict(model_args, **kwargs),
     )
     return model
