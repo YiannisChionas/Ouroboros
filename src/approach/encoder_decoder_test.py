@@ -93,15 +93,14 @@ class Appr(Incremental_Learning_Approach):
         self.model.eval()
         with torch.no_grad():
             for images, targets in val_loader:
-                images  = images.to(self.device)
-                targets = targets.to(self.device)
+                images = images.to(self.device)
 
                 outputs_old = None
                 if t > 0:
                     outputs_old = self.model_old(images, return_features=True)
                 outputs = self.model(images, return_features=True)
 
-                loss       = self.criterion(t, outputs, targets, outputs_old)
+                loss       = self.criterion(t, outputs, targets.to(self.device), outputs_old)
                 cls_logits = outputs['cls_logits']
 
                 hits_taw, hits_tag_std = self.calculate_metrics(cls_logits, targets)
@@ -111,7 +110,7 @@ class Appr(Incremental_Learning_Approach):
                     sims      = dist_feat @ proto_mat.T                         # [B, T]
                     pred_task = sims.argmax(dim=1)                              # [B]
 
-                    hits_tag_ret = self._retrieval_hits(cls_logits, targets, pred_task)
+                    hits_tag_ret = self._retrieval_hits(cls_logits, targets.to(self.device), pred_task)
                     hits_ret_acc = (pred_task == t).sum().item()
                 else:
                     hits_tag_ret = hits_tag_std.sum().item()
