@@ -2,16 +2,18 @@
 # Launch a SLURM job chain for a single approach, one task at a time.
 #
 # Usage:
-#   bash general.sh <job_script.sh> [NUM_TASKS]
+#   bash general.sh <job_script.sh> [NUM_TASKS] [START_FROM]
 #
 # Examples:
 #   bash general.sh vit_small_in1k/cifar100/finetuning.sh 10
 #   bash general.sh vit_small_in1k/inat200/lwf.sh 20
+#   bash general.sh deit_small_in1k/inat200/hydra_v4.sh 20 10   # resume from task 10
 
 set -euo pipefail
 
 JOB_SCRIPT="${1:-}"
 NUM_TASKS="${2:-10}"
+START_FROM="${3:-0}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 FULL_SCRIPT="$SCRIPT_DIR/$JOB_SCRIPT"
 
@@ -27,7 +29,7 @@ if [ ! -f "$FULL_SCRIPT" ]; then
 fi
 
 prev_jobid=""
-start=0
+start="$START_FROM"
 
 while [ "$start" -lt "$NUM_TASKS" ]; do
   stop=$((start + 1))
@@ -47,4 +49,4 @@ while [ "$start" -lt "$NUM_TASKS" ]; do
   start="$stop"
 done
 
-echo "All $NUM_TASKS tasks submitted."
+echo "All tasks $START_FROM→$NUM_TASKS submitted."
