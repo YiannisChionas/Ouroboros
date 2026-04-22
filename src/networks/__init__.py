@@ -3,6 +3,7 @@ from timm import models as timm_models
 
 from .deit_original import VisionTransformerDistilled, deit_small_distilled_patch16_224_cil, deit_base_distilled_patch16_224_cil
 from .vit_dist import VisionTransformerDistilledCIL, vit_small_patch16_224_dist
+from .vit_prompt import ViT_Prompt, vit_small_patch16_224_prompt
 
 # available torchvision models
 tvmodels = [
@@ -13,8 +14,8 @@ tvmodels = [
 # available timm models
 timmmodels = ['vit_base_patch16_224.orig_in21k', 'vit_base_patch16_224.augreg_in21k', 'vit_small_patch16_224.augreg_in1k', 'resnet50.a1_in1k','resnetv2_101x1_bit.goog_in21k']
 
-# DeiT / ViT-dist Feature extractor overrides
-allmodels = tvmodels + timmmodels + ['deit_small_distilled_patch16_224_cil', 'deit_base_distilled_patch16_224_cil', 'vit_small_patch16_224_dist']
+# DeiT / ViT-dist / ViT-prompt feature extractor overrides
+allmodels = tvmodels + timmmodels + ['deit_small_distilled_patch16_224_cil', 'deit_base_distilled_patch16_224_cil', 'vit_small_patch16_224_dist', 'vit_small_patch16_224_prompt']
 
 def set_model_head_var(model):
     # ResNet
@@ -29,6 +30,9 @@ def set_model_head_var(model):
         model.head_var = 'head'
     # DeiT pretrained (VisionTransformerDistilled) or ViT+noise dist_token (VisionTransformerDistilledCIL)
     elif type(model) in (VisionTransformerDistilled, VisionTransformerDistilledCIL):
+        model.head_var = 'head'
+    # ViT with prompt pool
+    elif type(model) == ViT_Prompt:
         model.head_var = 'head'
     else:
         raise ModuleNotFoundError
