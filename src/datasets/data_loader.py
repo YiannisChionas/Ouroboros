@@ -1,10 +1,15 @@
 import os
+import zipfile
 import numpy as np
+from PIL import Image
 from torch.utils import data
 import torchvision.transforms as transforms
 from torchvision.datasets import MNIST as TorchVisionMNIST
+from torchvision.datasets import CIFAR10 as TorchVisionCIFAR10
 from torchvision.datasets import CIFAR100 as TorchVisionCIFAR100
+from torchvision.datasets import FashionMNIST as TorchVisionFashionMNIST
 from torchvision.datasets import SVHN as TorchVisionSVHN
+from torchvision.datasets.utils import download_url
 from torchvision.transforms import InterpolationMode
 
 from . import base_dataset as basedat
@@ -14,6 +19,51 @@ _NORMALIZE_PRESETS = {
     'in1k':  ((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
     'in21k': ((0.5, 0.5, 0.5),       (0.5, 0.5, 0.5)),
 }
+
+
+def _gray_to_rgb(arr):
+    """Convert (N, H, W) uint8 grayscale array to (N, H, W, 3)."""
+    return np.stack([arr, arr, arr], axis=-1)
+
+
+def _load_notmnist(path):
+    """Download (if needed) and load NotMNIST. Returns (trn_x, trn_y, tst_x, tst_y).
+
+    Images are stored as (H, W, 3) uint8 numpy arrays (already RGB).
+    Labels are 0-9 (A=0, B=1, ..., J=9).
+    Source: https://github.com/facebookresearch/Adversarial-Continual-Learning
+    """
+    url      = 'https://github.com/facebookresearch/Adversarial-Continual-Learning/raw/main/data/notMNIST.zip'
+    zip_path = os.path.join(path, 'notMNIST.zip')
+    extract  = os.path.join(path, 'notMNIST')
+
+    if not os.path.isfile(zip_path):
+        print('Downloading NotMNIST from', url)
+        download_url(url, path, 'notMNIST.zip')
+
+    if not os.path.isdir(extract):
+        with zipfile.ZipFile(zip_path, 'r') as zf:
+            zf.extractall(path)
+
+    def _load_split(split_dir):
+        X, Y = [], []
+        for folder in sorted(os.listdir(split_dir)):
+            folder_path = os.path.join(split_dir, folder)
+            if not os.path.isdir(folder_path):
+                continue
+            label = ord(folder) - 65   # A→0, B→1, …, J→9
+            for fname in os.listdir(folder_path):
+                try:
+                    img = Image.open(os.path.join(folder_path, fname)).convert('RGB')
+                    X.append(np.array(img))
+                    Y.append(label)
+                except Exception:
+                    pass
+        return X, Y
+
+    trn_x, trn_y = _load_split(os.path.join(extract, 'Train'))
+    tst_x, tst_y = _load_split(os.path.join(extract, 'Test'))
+    return trn_x, trn_y, tst_x, tst_y
 
 def get_loaders(args: dict):
     """Apply transformations to Datasets and create the DataLoaders for each task"""
@@ -147,6 +197,81 @@ def get_dataset(dataset, path, increment, classes_first_task, validation, train_
                                                                   class_order=class_order
                                                                   )
         # set dataset type
+        Dataset = memd.MemoryDataset
+
+    elif dataset == 'five_datasets':
+        # 5-datasets benchmark: SVHN, MNIST, CIFAR-10, NotMNIST, FashionMNIST
+        # Each dataset = 1 task, labels offset to be globally unique (0-49).
+        # Images stored as (H,W,3) uint8 — different sizes per dataset, same within each task.
+        # get_data iterates element-by-element so mixed sizes are fine; np.asarray() per task
+        # works because each task contains only one dataset (uniform shape).
+
+        pieces_trn_x, pieces_trn_y = [], []
+        pieces_tst_x, pieces_tst_y = [], []
+
+        # Task 0: SVHN (labels 0-9)
+        svhn_trn = TorchVisionSVHN(path, split='train', download=True)
+        svhn_tst = TorchVisionSVHN(path, split='test',  download=True)
+        svhn_trn_x = svhn_trn.data.transpose(0, 2, 3, 1)   # (N,C,H,W) → (N,H,W,C)
+        svhn_tst_x = svhn_tst.data.transpose(0, 2, 3, 1)
+        svhn_trn_y = np.array(svhn_trn.labels, dtype=np.int64)
+        svhn_tst_y = np.array(svhn_tst.labels, dtype=np.int64)
+        np.place(svhn_trn_y, svhn_trn_y == 10, 0)           # SVHN labels digit 0 as 10
+        np.place(svhn_tst_y, svhn_tst_y == 10, 0)
+        pieces_trn_x.append(svhn_trn_x);  pieces_trn_y.append(svhn_trn_y + 0)
+        pieces_tst_x.append(svhn_tst_x);  pieces_tst_y.append(svhn_tst_y + 0)
+
+        # Task 1: MNIST (labels 10-19)
+        mnist_trn = TorchVisionMNIST(path, train=True,  download=True)
+        mnist_tst = TorchVisionMNIST(path, train=False, download=True)
+        pieces_trn_x.append(_gray_to_rgb(mnist_trn.data.numpy()))
+        pieces_trn_y.append(np.array(mnist_trn.targets) + 10)
+        pieces_tst_x.append(_gray_to_rgb(mnist_tst.data.numpy()))
+        pieces_tst_y.append(np.array(mnist_tst.targets) + 10)
+
+        # Task 2: CIFAR-10 (labels 20-29)
+        cifar10_trn = TorchVisionCIFAR10(path, train=True,  download=True)
+        cifar10_tst = TorchVisionCIFAR10(path, train=False, download=True)
+        pieces_trn_x.append(np.array(cifar10_trn.data))
+        pieces_trn_y.append(np.array(cifar10_trn.targets) + 20)
+        pieces_tst_x.append(np.array(cifar10_tst.data))
+        pieces_tst_y.append(np.array(cifar10_tst.targets) + 20)
+
+        # Task 3: NotMNIST (labels 30-39)
+        not_trn_x, not_trn_y, not_tst_x, not_tst_y = _load_notmnist(path)
+        pieces_trn_x.append(not_trn_x);  pieces_trn_y.append(np.array(not_trn_y) + 30)
+        pieces_tst_x.append(not_tst_x);  pieces_tst_y.append(np.array(not_tst_y) + 30)
+
+        # Task 4: FashionMNIST (labels 40-49)
+        fmnist_trn = TorchVisionFashionMNIST(path, train=True,  download=True)
+        fmnist_tst = TorchVisionFashionMNIST(path, train=False, download=True)
+        pieces_trn_x.append(_gray_to_rgb(fmnist_trn.data.numpy()))
+        pieces_trn_y.append(np.array(fmnist_trn.targets) + 40)
+        pieces_tst_x.append(_gray_to_rgb(fmnist_tst.data.numpy()))
+        pieces_tst_y.append(np.array(fmnist_tst.targets) + 40)
+
+        # Flatten into lists — mixed image shapes (28x28 / 32x32) require list, not np.concatenate.
+        # get_data iterates element-by-element so this is fine; filtering is a no-op (all labels valid).
+        trn_x_all, trn_y_all = [], []
+        tst_x_all, tst_y_all = [], []
+        for px, py in zip(pieces_trn_x, pieces_trn_y):
+            trn_x_all.extend(list(px)); trn_y_all.extend(py.tolist())
+        for px, py in zip(pieces_tst_x, pieces_tst_y):
+            tst_x_all.extend(list(px)); tst_y_all.extend(py.tolist())
+
+        train_data = {'x': trn_x_all, 'y': trn_y_all}
+        test_data  = {'x': tst_x_all, 'y': tst_y_all}
+
+        # Fixed order — each task = one dataset, no class shuffling
+        class_order = list(range(50))
+        all_data, classes_per_task, class_indices = memd.get_data(
+            train_data, test_data,
+            classes_first_task=None,
+            increment=10,
+            validation=validation,
+            shuffle_classes=False,
+            class_order=class_order,
+        )
         Dataset = memd.MemoryDataset
 
     elif dataset == 'imagenet_32':
