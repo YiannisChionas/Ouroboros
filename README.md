@@ -26,7 +26,7 @@ _**Continual learning with pretrained models**_
 <!-- TODO: add paper link -->
 
 It was built upon the existing Framework for Analysis of Class-Incremental Learning (FACIL) and was heavily inspired by PyCIL.
-It combines the logic of the two frameworks, utilizing Task-Incremental Learning support using FACIL's head management approach and the more 
+It combines the logic of the two frameworks, utilizing Task-Incremental Learning support using FACIL's head management approach and the more
 up-to-date PyCIL trainer and config logic. Reproducing the paper's experiments is supported and adding or suggesting new methods is more than welcome.
 Expanding and building upon existing work is crucial for the development of science, so feel free to use any part of this framework you find useful.
 If you do so, please take the time to cite the framework.
@@ -62,6 +62,8 @@ Current available approaches include:
   • SimpleCIL
   • LWF-DT
   • LWF-DT-COS
+  • Replay
+  • L2P
 </b></p>
 </div>
 
