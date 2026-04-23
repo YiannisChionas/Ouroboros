@@ -58,7 +58,7 @@ def vit_small_patch16_224_prompt(pretrained=False, **kwargs):
     """ViT-Small (augreg_in1k) with learnable prompt pool."""
     prompt_keys = ('pool_size', 'top_k', 'prompt_len')
     prompt_kwargs = {k: kwargs.pop(k) for k in prompt_keys if k in kwargs}
-    model_args = dict(patch_size=16, embed_dim=384, depth=12, num_heads=6)
+    model_args = dict(patch_size=16, embed_dim=384, depth=12, num_heads=6, num_classes=0)
     model = build_model_with_cfg(
         ViT_Prompt,
         'vit_small_patch16_224.augreg_in1k',
