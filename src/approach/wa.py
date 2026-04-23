@@ -34,7 +34,7 @@ class Appr(Incremental_Learning_Approach):
         return ExemplarsDataset
 
     def _get_optimizer(self):
-        if not self.exemplars_dataset and len(self.model.heads) > 1:
+        if self.exemplars_dataset is None and len(self.model.heads) > 1:
             params_all = list(self.model.model.parameters()) + list(self.model.heads[-1].parameters())
         else:
             params_all = list(self.model.parameters())
@@ -46,7 +46,7 @@ class Appr(Incremental_Learning_Approach):
     # ------------------------------------------------------------------
 
     def train_loop(self, t, trn_loader, val_loader):
-        if self.exemplars_dataset and t > 0:
+        if self.exemplars_dataset is not None and t > 0:
             trn_loader = torch.utils.data.DataLoader(
                 trn_loader.dataset + self.exemplars_dataset,
                 batch_size=trn_loader.batch_size, shuffle=True,
@@ -54,7 +54,7 @@ class Appr(Incremental_Learning_Approach):
 
         super().train_loop(t, trn_loader, val_loader)
 
-        if self.exemplars_dataset:
+        if self.exemplars_dataset is not None:
             self.exemplars_dataset.collect_exemplars(self.model, trn_loader, val_loader.dataset.transform)
 
     def post_train_process(self, t, trn_loader):
@@ -146,7 +146,7 @@ class Appr(Incremental_Learning_Approach):
                    if self.lamb == -1 else self.lamb
 
         # CE loss — with exemplars use all heads (global labels), else task head only
-        if self.exemplars_dataset:
+        if self.exemplars_dataset is not None:
             loss_ce = F.cross_entropy(torch.cat(outputs, dim=1), targets)
         else:
             loss_ce = F.cross_entropy(outputs[t], targets - self.model.task_offset[t])
