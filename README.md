@@ -20,8 +20,8 @@
 ---
 
 ## What is Ouroboros
-Ouroboros started as code for the paper:  
-_**Continual learning with pretrained models**_  
+Ouroboros started as code for the paper:
+_**Continual learning with pretrained models**_
 *Chionas Ioannis*
 <!-- TODO: add paper link -->
 
