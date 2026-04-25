@@ -30,9 +30,9 @@ class Appr(Incremental_Learning_Approach):
     # ------------------------------------------------------------------ setup
 
     def _get_optimizer(self):
-        """Only prompt pool + current head are trained; backbone stays frozen."""
+        """Prompt pool + all heads trained; backbone stays frozen."""
         prompt_params = list(self.model.model.prompt_pool.parameters())
-        head_params   = list(self.model.heads[-1].parameters())
+        head_params   = list(self.model.heads.parameters())
         params = [p for p in prompt_params + head_params if p.requires_grad]
         return torch.optim.SGD(params, lr=self.lr, weight_decay=self.weight_decay, momentum=self.momentum)
 
@@ -49,9 +49,8 @@ class Appr(Incremental_Learning_Approach):
 
             self.optimizer.zero_grad()
             loss.backward()
-            # clip only trainable params
             trainable = list(self.model.model.prompt_pool.parameters()) + \
-                        list(self.model.heads[-1].parameters())
+                        list(self.model.heads.parameters())
             torch.nn.utils.clip_grad_norm_(trainable, self.clipping)
             self.optimizer.step()
 
