@@ -192,7 +192,7 @@ class Appr(Incremental_Learning_Approach):
                 loss_mr = nn.MarginRankingLoss(margin=self.dist)(
                     gt_scores.reshape(-1, 1),
                     max_novel_scores.reshape(-1, 1),
-                    torch.ones(hard_num * self.K, device=self.device),
+                    torch.ones(hard_num * self.K, 1, device=self.device),
                 ) * self.lamb_mr
 
         # --- CE ---
