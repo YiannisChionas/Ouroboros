@@ -44,21 +44,16 @@ Current available approaches include:
 <div align="center">
 <p align="center"><b>
   • Finetuning
-  • Freezing <!-- TODO: port to current interface -->
+  • Freezing
   • Joint
   • LwF
   • iCaRL
   • EWC
-  • PathInt <!-- TODO: port to current interface -->
-  • MAS <!-- TODO: port to current interface -->
-  • RWalk <!-- TODO: port to current interface -->
   • EEIL
   • WA
-  • LwM <!-- TODO: port to current interface -->
-  • DMC <!-- TODO: port to current interface -->
+  • DMC
   • BiC
-  • LUCIR <!-- TODO: port to current interface -->
-  • IL2M <!-- TODO: port to current interface -->
+  • LUCIR
   • SimpleCIL
   • LWF-DT
   • LWF-DT-COS

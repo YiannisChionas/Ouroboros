@@ -25,7 +25,7 @@ class Logger(ExperimentLogger):
     def log_args(self, args):
         self.tbwriter.add_text(
             'args',
-            json.dumps(args.__dict__,
+            json.dumps(args if isinstance(args, dict) else args.__dict__,
                        separators=(',\n', ' : '),
                        sort_keys=True))
         self.tbwriter.file_writer.flush()
