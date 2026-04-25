@@ -212,6 +212,27 @@ class Appr(Incremental_Learning_Approach):
     # ------------------------------------------------------------------ resume
 
     def save_progress(self, results_path, task):
+        # Save real CosineLinear head weights separately
+        head_states = {f'heads.{i}': self.model.heads[i].state_dict()
+                       for i in range(len(self.model.heads))}
+        torch.save(head_states, os.path.join(results_path, f"task{task}_cosine_heads.pth"))
+
+        # Overwrite the main checkpoint with a Linear-compatible state dict so the
+        # trainer can load it on resume (add_head creates plain nn.Linear heads).
+        # CosineLinear has 'weight' + 'sigma'; nn.Linear expects 'weight' + 'bias'.
+        linear_state = {}
+        for k, v in self.model.state_dict().items():
+            if '.sigma' in k:
+                continue  # drop sigma — will be restored in load_progress
+            linear_state[k] = v
+        for i in range(len(self.model.heads)):
+            bkey = f'heads.{i}.bias'
+            if bkey not in linear_state:
+                linear_state[bkey] = torch.zeros(self.model.heads[i].out_features)
+        ckpt_path = os.path.join(results_path, 'models', f'task{task}.ckpt')
+        torch.save(linear_state, ckpt_path)
+
+        # Exemplars
         if self.exemplars_dataset is not None:
             torch.save(
                 {'images': self.exemplars_dataset.images, 'labels': self.exemplars_dataset.labels},
@@ -219,13 +240,34 @@ class Appr(Incremental_Learning_Approach):
             )
 
     def load_progress(self, results_path, task):
-        # Reconstruct ref_model from the already-loaded checkpoint
+        # The trainer has already loaded the Linear-compatible checkpoint.
+        # Replace all heads with CosineLinear and load the real weights.
+        n_heads = len(self.model.heads)
+        for i in range(n_heads):
+            in_f  = self.model.heads[i].in_features
+            out_f = self.model.heads[i].out_features
+            self.model.heads[i] = CosineLinear(in_f, out_f).to(self.device)
+        # Share sigma across all heads (same as during training)
+        for i in range(1, n_heads):
+            self.model.heads[i].sigma = self.model.heads[0].sigma
+
+        cosine_path = os.path.join(results_path, f"task{task}_cosine_heads.pth")
+        if os.path.isfile(cosine_path):
+            head_states = torch.load(cosine_path, weights_only=False, map_location=self.device)
+            for i in range(n_heads):
+                self.model.heads[i].load_state_dict(head_states[f'heads.{i}'])
+            print(f"Restored CosineLinear heads from {cosine_path}")
+        else:
+            warnings.warn(f"CosineLinear heads file not found at {cosine_path}!")
+
+        # Reconstruct ref_model with heads in train mode (for wosigma access in criterion)
         self.ref_model = deepcopy(self.model)
         self.ref_model.eval()
         for h in self.ref_model.heads:
             h.train()
         self.ref_model.freeze_all()
 
+        # Exemplars
         ex_file = os.path.join(results_path, f"task{task}_exemplars.pth")
         if os.path.isfile(ex_file) and self.exemplars_dataset is not None:
             state = torch.load(ex_file, weights_only=False)
