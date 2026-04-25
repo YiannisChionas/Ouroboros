@@ -32,7 +32,7 @@
     "crop": 224,
     "approach_args": {
         "T": 2,
-        "lamb": -1
+        "lamb": 0.5
     },
     "exemplars_args": {
         "num_exemplars": 2000,
