@@ -145,12 +145,12 @@ class Appr(Incremental_Learning_Approach):
         self.model.eval()
         with torch.no_grad():
             for images, targets in val_loader:
-                images, targets = images.to(self.device), targets.to(self.device)
+                images = images.to(self.device)
                 outputs, features = self.model(images, return_features=True)
                 ref_outputs, ref_features = None, None
                 if t > 0:
                     ref_outputs, ref_features = self.ref_model(images, return_features=True)
-                loss = self.criterion(t, outputs, targets, ref_outputs, features, ref_features)
+                loss = self.criterion(t, outputs, targets.to(self.device), ref_outputs, features, ref_features)
                 hits_taw, hits_tag = self.calculate_metrics(outputs, targets)
                 total_loss    += loss.item() * len(targets)
                 total_acc_taw += hits_taw.sum().item()
