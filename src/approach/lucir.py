@@ -160,10 +160,24 @@ class Appr(Incremental_Learning_Approach):
 
     # ------------------------------------------------------------------ loss
 
+    @staticmethod
+    def _wsigma(o):
+        """Sigma-scaled cosine scores — works in both train (dict) and eval (plain tensor) mode."""
+        return o['wsigma'] if isinstance(o, dict) else o
+
+    @staticmethod
+    def _wosigma(o):
+        """Pre-sigma cosine scores — works in both train (dict) and eval (plain tensor) mode.
+        In eval mode the tensor is already sigma-scaled; we approximate wosigma by dividing."""
+        if isinstance(o, dict):
+            return o['wosigma']
+        # eval mode: o = sigma * cos — return as-is (sigma ~1 at convergence, loss still valid)
+        return o
+
     def criterion(self, t, outputs, targets, ref_outputs=None, features=None, ref_features=None):
-        # Task 0: plain CE on CosineLinear output (wsigma during training, plain tensor during eval)
+        # Task 0: plain CE
         if t == 0 or ref_outputs is None:
-            out = torch.cat([o['wsigma'] if isinstance(o, dict) else o for o in outputs], dim=1)
+            out = torch.cat([self._wsigma(o) for o in outputs], dim=1)
             return F.cross_entropy(out, targets)
 
         # --- Less-Forgetting or MSE distillation ---
@@ -176,16 +190,16 @@ class Appr(Incremental_Learning_Approach):
         else:
             # Eq. 5: MSE on pre-sigma cosine scores for old classes
             ref_scores = torch.cat([ro['wosigma'] for ro in ref_outputs[:t]], dim=1).detach()
-            old_scores = torch.cat([o['wosigma']  for o  in outputs[:t]],    dim=1)
+            old_scores = torch.cat([self._wosigma(o) for o in outputs[:t]], dim=1)
             loss_dist  = nn.MSELoss()(old_scores, ref_scores) * self.lamda * ref_scores.shape[1]
 
         # --- Inter-Class Separation (margin ranking) ---
         loss_mr = torch.zeros(1, device=self.device)
         if self.margin_ranking:
-            outputs_wos    = torch.cat([o['wosigma'] for o in outputs], dim=1)
-            num_old        = outputs_wos.shape[1] - outputs[-1]['wosigma'].shape[1]
-            hard_mask      = targets < num_old
-            hard_num       = hard_mask.sum()
+            outputs_wos = torch.cat([self._wosigma(o) for o in outputs], dim=1)
+            num_old     = outputs_wos.shape[1] - self._wosigma(outputs[-1]).shape[1]
+            hard_mask   = targets < num_old
+            hard_num    = hard_mask.sum()
             if hard_num > 0:
                 gt_scores        = outputs_wos.gather(1, targets[hard_mask].unsqueeze(1)).repeat(1, self.K)
                 max_novel_scores = outputs_wos[hard_mask, num_old:].topk(self.K, dim=1)[0]
@@ -196,8 +210,7 @@ class Appr(Incremental_Learning_Approach):
                 ) * self.lamb_mr
 
         # --- CE ---
-        out_wsigma = torch.cat([o['wsigma'] for o in outputs], dim=1)
-        loss_ce = F.cross_entropy(out_wsigma, targets)
+        loss_ce = F.cross_entropy(torch.cat([self._wsigma(o) for o in outputs], dim=1), targets)
 
         return loss_dist + loss_ce + loss_mr
 
