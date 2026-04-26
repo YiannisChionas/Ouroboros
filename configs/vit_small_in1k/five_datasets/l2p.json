@@ -26,7 +26,7 @@
     "stop_at_task": 5,
     "multi_softmax": false,
     "fix_bn": false,
-    "freeze_backbone": false,
+    "freeze_backbone": true,
     "eval_on_train": false,
     "normalize": "in1k",
     "resize": 224,
