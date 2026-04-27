@@ -173,12 +173,12 @@ def vit_base_patch16_224_prompt(pretrained=False, **kwargs):
     """
     prompt_keys = ('pool_size', 'top_k', 'prompt_len', 'ref_backbone')
     prompt_kwargs = {k: kwargs.pop(k) for k in prompt_keys if k in kwargs}
-    prompt_kwargs.setdefault('ref_backbone', 'vit_base_patch16_224.augreg_in21k')
+    prompt_kwargs.setdefault('ref_backbone', 'vit_base_patch16_224.orig_in21k')
 
     model_args = dict(patch_size=16, embed_dim=768, depth=12, num_heads=12, num_classes=0)
     return build_model_with_cfg(
         ViT_Prompt,
-        'vit_base_patch16_224.augreg_in21k',
+        'vit_base_patch16_224.orig_in21k',
         pretrained=pretrained,
         pretrained_strict=False,
         pretrained_filter_fn=_l2p_filter,
