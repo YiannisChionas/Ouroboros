@@ -1,7 +1,7 @@
 {
     "dataset": "cifar100",
-    "network": "vit_small_patch16_224.augreg_in1k",
-    "approach": "ewc",
+    "network": "vit_base_patch16_224.orig_in21k",
+    "approach": "replay",
     "pretrained": true,
     "increment": 10,
     "classes_first_task": null,
@@ -28,14 +28,11 @@
     "freeze_backbone": false,
     "eval_on_train": false,
     "last_layer_analysis": true,
-    "all_outputs": false,
-    "normalize": "in1k",
+    "normalize": "in21k",
     "resize": 224,
-    "crop" : 224,
-    "approach_args": {
-        "lamb": 5000,
-        "alpha": -1,
-        "fi_sampling_type": "true",
-        "fi_num_samples": -1
+    "crop": 224,
+    "exemplars_args": {
+        "num_exemplars": 2000,
+        "exemplar_selection": "random"
     }
 }

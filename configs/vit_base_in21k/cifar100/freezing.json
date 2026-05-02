@@ -27,6 +27,7 @@
     "fix_bn": true,
     "freeze_backbone": true,
     "eval_on_train": false,
+    "last_layer_analysis": true,
     "normalize": "in21k",
     "resize": 224,
     "crop": 224
