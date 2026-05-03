@@ -267,15 +267,20 @@ class Appr(Incremental_Learning_Approach):
         return [self.bias_layers[m](outputs[m]) for m in range(len(outputs))]
 
     def save_progress(self, results_path, task):
-        """Save bias layers and val exemplars so resume works."""
+        """Save bias layers, training exemplars, and val exemplars so resume works."""
         import os
         torch.save([bl.state_dict() for bl in self.bias_layers],
                    os.path.join(results_path, f"task{task}_bias_layers.pth"))
         torch.save({'x': self.x_valid_exemplars, 'y': self.y_valid_exemplars},
                    os.path.join(results_path, f"task{task}_val_exemplars.pth"))
+        if self.exemplars_dataset is not None:
+            torch.save(
+                {'images': self.exemplars_dataset.images, 'labels': self.exemplars_dataset.labels},
+                os.path.join(results_path, f"task{task}_exemplars.pth")
+            )
 
     def load_progress(self, results_path, task):
-        """Restore model_old, bias layers and val exemplars on resume."""
+        """Restore model_old, bias layers, training exemplars, and val exemplars on resume."""
         import os, warnings
         self.model_old = deepcopy(self.model)
         self.model_old.eval()
@@ -292,6 +297,15 @@ class Appr(Incremental_Learning_Approach):
             print(f"Loaded {len(self.bias_layers)} bias layers from {bias_file}")
         else:
             warnings.warn(f"Bias layers file NOT found at {bias_file}!")
+
+        exemplars_file = os.path.join(results_path, f"task{task}_exemplars.pth")
+        if os.path.isfile(exemplars_file) and self.exemplars_dataset is not None:
+            state = torch.load(exemplars_file, weights_only=False)
+            self.exemplars_dataset.images = state['images']
+            self.exemplars_dataset.labels = state['labels']
+            print(f"Loaded {len(self.exemplars_dataset.images)} training exemplars from {exemplars_file}")
+        elif self.exemplars_dataset is not None:
+            warnings.warn(f"Training exemplars file NOT found at {exemplars_file}!")
 
         val_file = os.path.join(results_path, f"task{task}_val_exemplars.pth")
         if os.path.isfile(val_file):
