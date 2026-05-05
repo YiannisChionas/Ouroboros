@@ -1,7 +1,7 @@
 {
     "dataset": "cifar100",
-    "network": "vit_small_patch16_224.augreg_in1k",
-    "approach": "finetuning",
+    "network": "resnetv2_101x1_bit.goog_in21k",
+    "approach": "freezing",
     "pretrained": true,
     "increment": 10,
     "classes_first_task": null,
@@ -27,8 +27,7 @@
     "fix_bn": true,
     "freeze_backbone": true,
     "eval_on_train": false,
-    "all_outputs": false,
-    "normalize": "in1k",
+    "normalize": "in21k",
     "resize": 224,
     "crop": 224
 }

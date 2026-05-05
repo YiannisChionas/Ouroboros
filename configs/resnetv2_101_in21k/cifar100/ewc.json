@@ -1,19 +1,19 @@
 {
     "dataset": "cifar100",
-    "network": "vit_base_patch16_224.orig_in21k",
-    "approach": "simplecil",
+    "network": "resnetv2_101x1_bit.goog_in21k",
+    "approach": "ewc",
     "pretrained": true,
     "increment": 10,
     "classes_first_task": null,
-    "nepochs": 1,
+    "nepochs": 50,
     "batch_size": 64,
-    "lr": null,
-    "lr_scheduler": null,
-    "lr_min": null,
+    "lr": 0.01,
+    "lr_scheduler": "cosine",
+    "lr_min": 1e-4,
     "optimizer_name": "sgd",
     "momentum": 0.0,
     "weight_decay": 0.0,
-    "clipping": null,
+    "clipping": 10000,
     "num_workers": 2,
     "pin_memory": false,
     "seed": 0,
@@ -31,5 +31,11 @@
     "all_outputs": false,
     "normalize": "in21k",
     "resize": 224,
-    "crop": 224
+    "crop" : 224,
+    "approach_args": {
+        "lamb": 5000,
+        "alpha": -1,
+        "fi_sampling_type": "true",
+        "fi_num_samples": -1
+    }
 }
