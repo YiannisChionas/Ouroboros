@@ -38,7 +38,7 @@ class Incremental_Learning_Approach:
         self.logger =            logger
         self.exemplars_dataset = exemplars_dataset
         self.warmup_epochs =     args['warmup_nepochs']
-        self.warmup_lr_factor =  self.lr * args['warmup_lr_factor']
+        self.warmup_lr_factor =  self.lr * args['warmup_lr_factor'] if self.lr is not None else None
         self.warmup_loss =       torch.nn.CrossEntropyLoss()
         self.fix_bn =            args['fix_bn']
         self.freeze_backbone =   args['freeze_backbone']
