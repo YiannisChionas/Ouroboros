@@ -1,6 +1,6 @@
 {
     "dataset": "cifar100",
-    "network": "vit_small_patch16_224_dist",
+    "network": "deit_base_distilled_patch16_224_cil",
     "approach": "hydra",
     "pretrained": true,
     "distilled": true,
@@ -28,7 +28,7 @@
     "fix_bn": false,
     "freeze_backbone": false,
     "eval_on_train": false,
-    "last_layer_analysis": false,
+    "all_outputs": false,
     "normalize": "in1k",
     "resize": 224,
     "crop": 224,

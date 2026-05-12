@@ -1,7 +1,7 @@
 <div align="center">
 <img src="./assets/images/Banner.png" width="800px">
 
-# Ouroboros - A continual learning example.
+# Ouroboros - A continual learning framework.
 
 ---
 
@@ -50,15 +50,15 @@ Current available approaches include:
   • iCaRL
   • EWC
   • EEIL
-  • WA
-  • DMC
+  • WA ( Needs Verification )
+  • DMC ( Coming Sooon ...)
   • BiC
   • LUCIR
   • SimpleCIL
-  • LWF-DT
-  • LWF-DT-COS
   • Replay
   • L2P
+  • LWF-Dual ( Dual Head Method )
+  • Hydra ( Dual Head Method )
 </b></p>
 </div>
 

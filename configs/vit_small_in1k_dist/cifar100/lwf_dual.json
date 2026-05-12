@@ -1,7 +1,7 @@
 {
     "dataset": "cifar100",
     "network": "vit_small_patch16_224_dist",
-    "approach": "hydra",
+    "approach": "lwf_dual",
     "pretrained": true,
     "distilled": true,
     "increment": 10,
@@ -28,15 +28,12 @@
     "fix_bn": false,
     "freeze_backbone": false,
     "eval_on_train": false,
-    "last_layer_analysis": false,
+    "all_outputs": false,
     "normalize": "in1k",
     "resize": 224,
     "crop": 224,
     "approach_args": {
         "lamb": 1.0,
-        "lamb_cos": 1.0,
-        "lamb_dist": 1.0,
-        "lamb_dist_kd": 1.0,
         "T": 2
     }
 }

@@ -1,6 +1,6 @@
 {
     "dataset": "cifar100",
-    "network": "vit_small_patch16_224_dist",
+    "network": "vit_base_patch16_224_dist",
     "approach": "hydra",
     "pretrained": true,
     "distilled": true,
@@ -29,7 +29,7 @@
     "freeze_backbone": false,
     "eval_on_train": false,
     "last_layer_analysis": false,
-    "normalize": "in1k",
+    "normalize": "in21k",
     "resize": 224,
     "crop": 224,
     "approach_args": {

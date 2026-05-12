@@ -36,6 +36,7 @@
         "lamb": 1.0,
         "lamb_cos": 1.0,
         "lamb_dist": 1.0,
+        "lamb_dist_kd": 1.0,
         "T": 2
     }
 }

@@ -1,6 +1,6 @@
 {
     "dataset": "cifar100",
-    "network": "vit_small_patch16_224_dist",
+    "network": "vit_base_patch16_224_dist_in1k",
     "approach": "hydra",
     "pretrained": true,
     "distilled": true,

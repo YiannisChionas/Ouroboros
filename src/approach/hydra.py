@@ -7,16 +7,18 @@ from datasets.exemplars_dataset import ExemplarsDataset
 
 
 class Appr(Incremental_Learning_Approach):
-    """Hydra: dual-head CIL with split roles.
+    """Hydra v4: adds KD on old dist_logits to regularize backbone via frozen dist_heads.
 
-    cls_head  → in-task classifier (standard CE + KD)
-    dist_head → task identifier (trained with CE, frozen after each task)
+    The frozen dist_heads act as backbone regularizers: KL distillation between
+    current and teacher dist_logits for old tasks forces the backbone to keep
+    producing compatible features for the frozen heads, reducing task 0 forgetting.
 
     Training:
-      - cls_head, old tasks : soft KL distillation on cls logits
-      - dist_features       : cosine similarity loss for feature stability
-      - cls_head, current   : CE with GT
-      - dist_head, current  : CE with GT (trains as task detector)
+      - cls_head, old tasks  : soft KL distillation on cls logits
+      - dist_logits, old tasks: soft KL distillation on dist logits (NEW)
+      - dist_features        : cosine similarity loss for feature stability
+      - cls_head, current    : CE with GT
+      - dist_head, current   : CE with GT
 
     After each task: freeze dist_head[t].
 
@@ -33,10 +35,11 @@ class Appr(Incremental_Learning_Approach):
     def __init__(self, args, model, logger=None, exemplars_dataset=None):
         super().__init__(args, model, logger, exemplars_dataset)
         aargs = args.get('approach_args', {})
-        self.lamb      = aargs.get('lamb', 1.0)
-        self.lamb_cos  = aargs.get('lamb_cos', 1.0)
-        self.lamb_dist = aargs.get('lamb_dist', 1.0)
-        self.T         = aargs.get('T', 2)
+        self.lamb          = aargs.get('lamb', 1.0)
+        self.lamb_cos      = aargs.get('lamb_cos', 1.0)
+        self.lamb_dist     = aargs.get('lamb_dist', 1.0)
+        self.lamb_dist_kd  = aargs.get('lamb_dist_kd', 1.0)
+        self.T             = aargs.get('T', 2)
 
         self.model_old = None
 
@@ -49,11 +52,9 @@ class Appr(Incremental_Learning_Approach):
     # ------------------------------------------------------------------
 
     def post_train_process(self, t, trn_loader):
-        # Freeze dist_head[t] — it becomes a fixed task detector
         for param in self.model.heads_dist[t].parameters():
             param.requires_grad = False
 
-        # Save teacher
         self.model_old = deepcopy(self.model)
         self.model_old.eval()
         self.model_old.freeze_all()
@@ -96,13 +97,12 @@ class Appr(Incremental_Learning_Approach):
 
                 hits_taw, hits_tag_std = self.calculate_metrics(cls_logits, targets)
 
-                # Task retrieval via frozen dist_head confidence
                 if t > 0:
                     task_confs = torch.stack([
                         F.softmax(dist_logits[k], dim=1).max(dim=1).values
                         for k in range(t + 1)
                     ], dim=1)  # [B, t+1]
-                    pred_task = task_confs.argmax(dim=1)  # [B]
+                    pred_task = task_confs.argmax(dim=1)
 
                     hits_tag_ret = self._retrieval_hits(cls_logits, targets.to(self.device), pred_task)
                     hits_ret_acc = (pred_task == t).sum().item()
@@ -123,13 +123,12 @@ class Appr(Incremental_Learning_Approach):
         return total_loss / total_num, total_taw / total_num, total_tag_ret / total_num
 
     def _retrieval_hits(self, cls_logits, targets, pred_task):
-        """Per-sample: use cls_logits[pred_task[i]] + task offset for global class prediction."""
-        logits_stack = torch.stack(cls_logits, dim=1)                      # [B, T, n_cls_per_task]
+        logits_stack = torch.stack(cls_logits, dim=1)
         B, _, n      = logits_stack.shape
         idx          = pred_task.view(B, 1, 1).expand(B, 1, n)
-        selected     = logits_stack.gather(1, idx).squeeze(1)              # [B, n_cls]
-        task_off     = self.model.task_offset.to(self.device)[pred_task]   # [B]
-        pred_cls     = selected.argmax(dim=1) + task_off                   # [B] global class
+        selected     = logits_stack.gather(1, idx).squeeze(1)
+        task_off     = self.model.task_offset.to(self.device)[pred_task]
+        pred_cls     = selected.argmax(dim=1) + task_off
         return (pred_cls == targets).sum().item()
 
     # ------------------------------------------------------------------
@@ -163,15 +162,18 @@ class Appr(Incremental_Learning_Approach):
                 torch.cat(outputs_old['cls_logits'][:t], dim=1),
                 exp=1.0 / self.T
             )
-            # Cosine loss on dist features (feature stability)
+            # KD on dist logits (old tasks) — backbone regularization via frozen dist_heads
+            loss += self.lamb_dist_kd * self.cross_entropy(
+                torch.cat(dist_logits[:t], dim=1),
+                torch.cat(outputs_old['dist_logits'][:t], dim=1),
+                exp=1.0 / self.T
+            )
+            # Cosine loss on dist features
             student_dist = F.normalize(outputs['dist_features'],     dim=-1)
             teacher_dist = F.normalize(outputs_old['dist_features'], dim=-1)
             loss += self.lamb_cos * (1 - (student_dist * teacher_dist).sum(dim=-1).mean())
 
-        # CE on cls_head (in-task classification)
         loss += F.cross_entropy(cls_logits[t], targets - self.model.task_offset[t])
-
-        # CE on dist_head (task identification)
         loss += self.lamb_dist * F.cross_entropy(dist_logits[t], targets - self.model.task_offset[t])
 
         return loss
@@ -185,7 +187,6 @@ class Appr(Incremental_Learning_Approach):
         self.model_old.eval()
         self.model_old.freeze_all()
 
-        # Re-freeze dist_heads that were already trained and frozen
         for k in range(task):
             for param in self.model.heads_dist[k].parameters():
                 param.requires_grad = False

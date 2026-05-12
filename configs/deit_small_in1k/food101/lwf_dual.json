@@ -1,12 +1,13 @@
 {
-    "dataset": "cifar100",
-    "network": "vit_small_patch16_224_dist",
-    "approach": "hydra",
+    "dataset": "food101",
+    "data_path": "../data/food101",
+    "network": "deit_small_distilled_patch16_224_cil",
+    "approach": "lwf_dual",
     "pretrained": true,
     "distilled": true,
     "increment": 10,
     "classes_first_task": null,
-    "nepochs": 50,
+    "nepochs": 70,
     "batch_size": 64,
     "lr": 0.01,
     "lr_scheduler": "cosine",
@@ -18,7 +19,7 @@
     "num_workers": 2,
     "pin_memory": false,
     "seed": 0,
-    "results_path": "./results",
+    "results_path": "../results",
     "experiment_path": null,
     "log": ["disk"],
     "save_models": true,
@@ -28,15 +29,11 @@
     "fix_bn": false,
     "freeze_backbone": false,
     "eval_on_train": false,
-    "last_layer_analysis": false,
     "normalize": "in1k",
     "resize": 224,
     "crop": 224,
     "approach_args": {
         "lamb": 1.0,
-        "lamb_cos": 1.0,
-        "lamb_dist": 1.0,
-        "lamb_dist_kd": 1.0,
         "T": 2
     }
 }
