@@ -7,15 +7,11 @@ from datasets.exemplars_dataset import ExemplarsDataset
 
 
 class Appr(Incremental_Learning_Approach):
-    """Hydra v4: adds KD on old dist_logits to regularize backbone via frozen dist_heads.
-
-    The frozen dist_heads act as backbone regularizers: KL distillation between
-    current and teacher dist_logits for old tasks forces the backbone to keep
-    producing compatible features for the frozen heads, reducing task 0 forgetting.
+    """Hydra: dual-head CIL with dist_head as frozen task identifier.
 
     Training:
       - cls_head, old tasks  : soft KL distillation on cls logits
-      - dist_logits, old tasks: soft KL distillation on dist logits (NEW)
+      - dist_logits, old tasks: soft KL distillation on dist logits (backbone regularization)
       - dist_features        : cosine similarity loss for feature stability
       - cls_head, current    : CE with GT
       - dist_head, current   : CE with GT

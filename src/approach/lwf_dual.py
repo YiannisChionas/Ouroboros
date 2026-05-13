@@ -7,17 +7,12 @@ from datasets.exemplars_dataset import ExemplarsDataset
 
 
 class Appr(Incremental_Learning_Approach):
-    """
-    LwF with soft KL distillation on both cls and dist logits — cls-only inference.
-    Ported to the v2 args-dict interface. Requires LLL_Net_Distilled (distilled: true).
+    """LwF dual-head: soft KL distillation on both cls and dist heads, cls-only inference.
 
     - cls head, old tasks : soft KL distillation against teacher cls_logits
     - dist head, old tasks: soft KL distillation against teacher cls_logits (same teacher target)
-    - current task: CE with ground truth on cls head only
-    - inference: cls logits only
-
-    Both heads are anchored to the same teacher signal (cls logits), giving the dist token
-    an additional regularisation path that reinforces backbone stability.
+    - current task        : CE with GT on cls head only
+    - inference           : cls logits only
     """
 
     def __init__(self, args, model, logger=None, exemplars_dataset=None):
