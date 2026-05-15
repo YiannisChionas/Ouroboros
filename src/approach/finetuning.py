@@ -24,12 +24,14 @@ class Appr(Incremental_Learning_Approach):
         else:
             params_all = list(self.model.parameters())
         params = [p for p in params_all if p.requires_grad]
+        extra = {'nesterov': False} if self.optimizer_name == 'sgd' else {}
         return timm.optim.create_optimizer_v2(
             params,
             opt=self.optimizer_name,
             lr=self.lr,
             weight_decay=self.weight_decay,
             momentum=self.momentum,
+            **extra,
         )
 
     def train_loop(self, t, trn_loader, val_loader):
