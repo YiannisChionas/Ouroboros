@@ -30,7 +30,6 @@ class Appr(Incremental_Learning_Approach):
             lr=self.lr,
             weight_decay=self.weight_decay,
             momentum=self.momentum,
-            nesterov=False,
         )
 
     def train_loop(self, t, trn_loader, val_loader):
