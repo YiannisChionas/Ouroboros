@@ -1,3 +1,4 @@
+import timm.optim
 import torch
 
 from .incremental_learning import Incremental_Learning_Approach
@@ -19,12 +20,18 @@ class Appr(Incremental_Learning_Approach):
     def _get_optimizer(self):
         """Returns the optimizer"""
         if not self.exemplars_dataset and len(self.model.heads) > 1 and not self.all_out:
-            # if there are no exemplars, previous heads are not modified
             params_all = list(self.model.model.parameters()) + list(self.model.heads[-1].parameters())
         else:
             params_all = list(self.model.parameters())
         params = [p for p in params_all if p.requires_grad]
-        return torch.optim.SGD(params, lr=self.lr, weight_decay=self.weight_decay, momentum=self.momentum)
+        return timm.optim.create_optimizer_v2(
+            params,
+            opt=self.optimizer_name,
+            lr=self.lr,
+            weight_decay=self.weight_decay,
+            momentum=self.momentum,
+            nesterov=False,
+        )
 
     def train_loop(self, t, trn_loader, val_loader):
         """Contains the epochs loop"""
