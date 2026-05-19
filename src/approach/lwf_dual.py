@@ -7,12 +7,11 @@ from datasets.exemplars_dataset import ExemplarsDataset
 
 
 class Appr(Incremental_Learning_Approach):
-    """LwF dual-head: soft KL distillation on both cls and dist heads, cls-only inference.
+    """LwF Dual (https://TODO)
 
-    - cls head, old tasks : soft KL distillation against teacher cls_logits
-    - dist head, old tasks: soft KL distillation against teacher cls_logits (same teacher target)
-    - current task        : CE with GT on cls head only
-    - inference           : cls logits only
+    Approach-specific args are read from args['approach_args']:
+        lamb  (float, default 1.0) — distillation loss weight
+        T     (int,   default 2)   — softmax temperature
     """
 
     def __init__(self, args, model, logger=None, exemplars_dataset=None):
@@ -22,28 +21,26 @@ class Appr(Incremental_Learning_Approach):
         self.lamb = aargs.get('lamb', 1.0)
         self.T    = aargs.get('T', 2)
 
-    @staticmethod
-    def exemplars_dataset_class():
-        return ExemplarsDataset
-
     # ------------------------------------------------------------------
     # Training
     # ------------------------------------------------------------------
 
     def post_train_process(self, t, trn_loader):
+        """Save a frozen copy of the model after each task — used as teacher for next task."""
         self.model_old = deepcopy(self.model)
         self.model_old.eval()
         self.model_old.freeze_all()
 
     def train_epoch(self, t, trn_loader):
+        """Runs a single epoch"""
         self.model.train()
         for images, targets in trn_loader:
-            outputs_old = None
+            targets_old = None
             if t > 0:
                 with torch.no_grad():
-                    outputs_old = self.model_old(images.to(self.device))
+                    targets_old = self.model_old(images.to(self.device))
             outputs = self.model(images.to(self.device))
-            loss = self.criterion(t, outputs, targets.to(self.device), outputs_old)
+            loss = self.criterion(t, outputs, targets.to(self.device), targets_old)
             self.optimizer.zero_grad()
             loss.backward()
             torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.clipping)
@@ -54,15 +51,16 @@ class Appr(Incremental_Learning_Approach):
     # ------------------------------------------------------------------
 
     def eval(self, t, val_loader):
+        """Contains the evaluation code"""
         with torch.no_grad():
             total_loss, total_acc_taw, total_acc_tag, total_num = 0, 0, 0, 0
             self.model.eval()
             for images, targets in val_loader:
-                outputs_old = None
+                targets_old = None
                 if t > 0:
-                    outputs_old = self.model_old(images.to(self.device))
+                    targets_old = self.model_old(images.to(self.device))
                 outputs = self.model(images.to(self.device))
-                loss = self.criterion(t, outputs, targets.to(self.device), outputs_old)
+                loss = self.criterion(t, outputs, targets.to(self.device), targets_old)
 
                 # Inference: cls logits only
                 hits_taw, hits_tag = self.calculate_metrics(outputs["cls_logits"], targets)
@@ -104,22 +102,23 @@ class Appr(Incremental_Learning_Approach):
             ce = ce.mean()
         return ce
 
-    def criterion(self, t, outputs, targets, outputs_old):
+    def criterion(self, t, outputs, targets, targets_old):
+        """Returns the loss value"""
         loss = 0
         cls_logits  = outputs["cls_logits"]
         dist_logits = outputs["dist_logits"]
 
         if t > 0:
-            teacher_cls = torch.cat(outputs_old["cls_logits"][:t], dim=1)
+            teacher_cls = torch.cat(targets_old["cls_logits"][:t], dim=1)
 
-            # Loss 1: soft KL on cls logits for old tasks
+            # Loss 1: soft KD on cls logits for old tasks
             loss += self.lamb * self.cross_entropy(
                 torch.cat(cls_logits[:t], dim=1),
                 teacher_cls,
                 exp=1.0 / self.T
             )
 
-            # Loss 2: soft KL on dist logits for old tasks (same teacher target)
+            # Loss 2: soft KD on dist logits for old tasks (same teacher target)
             loss += self.lamb * self.cross_entropy(
                 torch.cat(dist_logits[:t], dim=1),
                 teacher_cls,

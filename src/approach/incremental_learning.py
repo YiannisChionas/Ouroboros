@@ -211,11 +211,6 @@ class Incremental_Learning_Approach:
         """Runs after training all the epochs of the task (after the train session)"""
         pass
 
-    def save_checkpoint_state(self, models_dir, task):
-        # Base implementation does nothing.
-        # Override in subclass to persist approach-specific state (e.g. exemplars, fisher).
-        pass
-
     def load_progress(self, results_path, task):
         # Base implementation does nothing.
         # Override in subclass to restore approach-specific state on resume.
@@ -224,7 +219,6 @@ class Incremental_Learning_Approach:
     def save_progress(self, results_path, task):
         # Base implementation does nothing.
         # Override in subclass if your approach needs to persist state on pause
-        # (e.g. exemplars, model_old, fisher matrices) so that resume works correctly.
         pass
 
     def train_epoch(self, t, trn_loader):

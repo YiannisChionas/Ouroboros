@@ -1,18 +1,46 @@
 # Approaches
-We include baselines (Finetuning, Freezing and Incremental Joint Training) and the approaches defined in 
-_**Class-incremental learning: survey and performance evaluation**_ ([arxiv](https://arxiv.org/abs/2010.15277)).
-The regularization-based approaches are EWC, MAS, PathInt, LwF, LwM and DMC. The rehearsal approaches are iCaRL, EEIL
-and RWalk. The bias-correction approaches are IL2M, BiC and LUCIR.
+We include the following baselines:
+* Finetuning ~ Finetuning the backbone along with the heads in each task without forgetting limitations.
+* Freezing   ~ Finetuning the heads while keeping the backbone frozen. Serves as an indicator of the backbone's pretraining quality while using LinearLayer classification head.
+* SimpleCIL  ~ Keeps the backbone frozen while using a nearest class mean classifier on the features provided by the backbone for a specific task. Serves as an indicator of the backbone's pretraining quality.
+* Replay     ~ Finetuning with the addition of exemplars. Serves as the lower bound for replay methods.
+* Joint      ~ Incremental Joint Training. Serves as the upper bound.
+
+The regularization-based approaches available:
+* EWC
+* LwF
+* DMC (Not Ready)
+
+The rehearsal approaches available:
+* iCaRL
+* EEIL
+
+The bias-correction approaches available:
+* BiC
+* LUCIR
+
+The prompting approaches available:
+* L2P
+* DualPrompt (Not Ready)
+
+The distillation token approaches introduced in this repository:
+* LWF Dual
+* Hydra
 
 ## Main usage
-When running an experiment, the approach used can be defined in [main_incremental.py](../main_incremental.py) using
-`--approach`. Each approach is called by their respective `*.py` name. All approaches inherit from class
-`Inc_Learning_Appr`, which has the following main arguments:
+We integrated PYCIL's logic of configuration files. The approach can be defined in the configuration file
+using
+```json
+"approach": "approach_name"
+```
+Each approach is called by their respective `*.py` name. All approaches inherit from class
+`Increamental_Learning_Approach`, which has the following variables:
 
-* `--nepochs`: number of epochs per training session (default=200)
+* `--nepochs`: number of epochs per training session (default=50)
+* `--optimizer_name`: learning rate optimiser (default=sgd)
+* `--lr-scheduler`: learning rate scheduler (default=None)
 * `--lr`: starting learning rate (default=0.1)
 * `--lr-min`: minimum learning rate (default=1e-4)
-* `--lr-factor`: learning rate decreasing factor (default=3)
 * `--lr-patience`: maximum patience to wait before decreasing learning rate (default=5)
 * `--clipping`: clip gradient norm (default=10000)
 * `--momentum`: momentum factor (default=0.0)
@@ -23,8 +51,8 @@ When running an experiment, the approach used can be defined in [main_incrementa
 * `--fix-bn`: fix batch normalization after first task (default=False)
 * `--eval-on-train`: show train loss and accuracy (default=False)
 
-If the approach has some specific arguments, those are defined in the specific `extra_parser()` of each approach file
-and are also listed below. All of this information is also available by using `--help`.
+If the approach has some specific arguments, those should be defined in the specific `approach_args` of each configuration file.
+All of this information is also available by using `--help`.
 
 ### Allowing rehearsal
 For all approaches using exemplars, the corresponding arguments are:
@@ -49,22 +77,32 @@ To add a new approach, follow this:
 ## Baselines
 
 ### Finetuning
-`--approach finetuning`
-
+```json
+"approach": "finetuning"
+```
 Learning approach which learns each task incrementally while not using any data or knowledge from previous tasks. By
 default, weights corresponding to the outputs of previous classes are not updated. This can be changed by using
 `--all-outputs`. This approach allows the use of exemplars.
 
 ### Freezing
-`--approach freezing`
-
+```json
+"approach": "freezing"
+```
 Learning approach which freezes the model after training the first task so only the heads are learned. The task after
 which the model is frozen can be changed by using `--freeze-after num_task (int)`. As in Finetuning, by default the
 corresponding to the current task outputs are updated, but can be changed by using `--all-outputs`.
 
-### Incremental Joint Training
-`--approach joint`
+### SimpleCIL
+```json
+"approach": "simplecil"
+```
+Learning approach which uses pretrained frozen backbone as feature extractor. The classification is achieved using a nearest
+class mean classifier on the features.
 
+### Incremental Joint Training
+```json
+"approach": "joint"
+```
 Learning approach which has access to all data from previous tasks and serves as an upperbound baseline. Joint training 
 can be combined with Freezing by using `--freeze-after num_task (int)`. However, this option is disabled (default=-1).
 
@@ -95,37 +133,6 @@ can be combined with Freezing by using `--freeze-after num_task (int)`. However,
 * `--fi-sampling-type`: sampling type for Fisher information (default='max_pred')
 * `--fi-num-samples`: number of samples for Fisher information (-1: all available) (default=-1)
 
-### Path Integral (aka Synaptic Intelligence)
-`--approach path_integral`
-[arxiv](https://arxiv.org/abs/1703.04200)
-| [ICML 2017](http://proceedings.mlr.press/v70/zenke17a.html)
-| [code](https://github.com/ganguli-lab/pathint)
-
-* `--lamb`: forgetting-intransigence trade-off (default=0.1)
-* `--damping`: damping (default=0.1)
-
-### Memory Aware Synapses
-`--approach mas`
-[arxiv](https://arxiv.org/abs/1711.09601)
-| [ECCV 2018](https://openaccess.thecvf.com/content_ECCV_2018/papers/Rahaf_Aljundi_Memory_Aware_Synapses_ECCV_2018_paper.pdf)
-| [code](https://github.com/rahafaljundi/MAS-Memory-Aware-Synapses)
-
-* `--lamb`: forgetting-intransigence trade-off (default=1)
-* `--alpha`: trade-off for how old and new fisher are fused (default=0.5)
-* `--fi-num-samples`: number of samples for Fisher information (-1: all available) (default=-1)
-
-### Riemannian Walk
-`--approach r_walk`
-[arxiv](https://arxiv.org/abs/1801.10112)
-| [ECCV 2018](http://openaccess.thecvf.com/content_ECCV_2018/papers/Arslan_Chaudhry__Riemannian_Walk_ECCV_2018_paper.pdf)
-| [code](https://github.com/facebookresearch/agem)
-
-* `--lamb`: forgetting-intransigence trade-off (default=1)
-* `--alpha`: trade-off for how old and new fisher are fused (default=0.5)
-* `--damping`: damping (default=0.1)
-* `--fi-sampling-type`: sampling type for Fisher information (default='max_pred')
-* `--fi-num-samples`: number of samples for Fisher information (-1: all available) (default=-1)
-
 ### End-to-End Incremental Learning
 `--approach eeil`
 [arxiv](https://arxiv.org/abs/1807.09536)
@@ -137,16 +144,6 @@ can be combined with Freezing by using `--freeze-after num_task (int)`. However,
 * `--lr-finetuning-factor`: finetuning learning rate factor (default=0.01)
 * `--nepochs-finetuning`: number of epochs for balanced training (default=40)
 * `--noise-grad`: add noise to gradients (default=False)
-
-### Learning without Memorizing
-`--approach lwm`
-[arxiv](http://arxiv.org/abs/1811.08051)
-| [CVPR 2019](https://openaccess.thecvf.com/content_CVPR_2019/papers/Dhar_Learning_Without_Memorizing_CVPR_2019_paper.pdf)
-
-* `--beta`: trade-off for distillation loss (default=1)
-* `--gamma`: trade-off for attention loss (default=1)
-* `--gradcam-layer`: which layer take for GradCAM calculations (default='layer3')
-* `--log-gradcam-samples`: how many examples of GradCAM to log (default=0)
 
 ### Deep Model Consolidation
 `--approach dmc`
@@ -177,8 +174,3 @@ can be combined with Freezing by using `--freeze-after num_task (int)`. However,
 * `--lamb-mr`: trade-off for the MR loss (default=1)
 * `--dist`: margin threshold for the MR loss  (default=0.5)
 * `--K`: Number of "new class embeddings chosen as hard negatives for MR loss (default=2)
-
-### Dual Memory (IL2M)
-`--approach il2m`
-[ICCV 2019](https://openaccess.thecvf.com/content_ICCV_2019/papers/Belouadah_IL2M_Class_Incremental_Learning_With_Dual_Memory_ICCV_2019_paper.pdf)
-| [code](https://github.com/EdenBelouadah/class-incremental-learning/tree/master/il2m)
