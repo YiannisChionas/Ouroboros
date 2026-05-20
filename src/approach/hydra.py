@@ -5,39 +5,26 @@ from copy import deepcopy
 from .incremental_learning import Incremental_Learning_Approach
 from datasets.exemplars_dataset import ExemplarsDataset
 
-
 class Appr(Incremental_Learning_Approach):
-    """Hydra: dual-head CIL with dist_head as frozen task identifier.
+    """Hydra (https://TODO)
 
-    Training:
-      - cls_head, old tasks  : soft KL distillation on cls logits
-      - dist_logits, old tasks: soft KL distillation on dist logits (backbone regularization)
-      - dist_features        : cosine similarity loss for feature stability
-      - cls_head, current    : CE with GT
-      - dist_head, current   : CE with GT
-
-    After each task: freeze dist_head[t].
-
-    Inference:
-      - max softmax confidence from each frozen dist_head → predicted task
-      - cls_logits[predicted_task] → final class prediction
-
-    Logged metrics:
-      - acc_tag_std   : standard TAg (argmax over all cls heads, no retrieval)
-      - retrieval_acc : fraction of samples where task retrieval is correct
-    Returned acc_tag  : retrieval-based TAg
+    Approach-specific args are read from args['approach_args']:
+        lamb          (float, default 1.0) — cls KD loss weight
+        lamb_cos      (float, default 1.0) — cosine feature loss weight
+        lamb_dist     (float, default 1.0) — dist CE loss weight
+        lamb_dist_kd  (float, default 1.0) — dist KD loss weight
+        T             (int,   default 2)   — softmax temperature
     """
 
     def __init__(self, args, model, logger=None, exemplars_dataset=None):
         super().__init__(args, model, logger, exemplars_dataset)
+        self.model_old = None
         aargs = args.get('approach_args', {})
         self.lamb          = aargs.get('lamb', 1.0)
         self.lamb_cos      = aargs.get('lamb_cos', 1.0)
         self.lamb_dist     = aargs.get('lamb_dist', 1.0)
         self.lamb_dist_kd  = aargs.get('lamb_dist_kd', 1.0)
         self.T             = aargs.get('T', 2)
-
-        self.model_old = None
 
     @staticmethod
     def exemplars_dataset_class():
@@ -48,6 +35,7 @@ class Appr(Incremental_Learning_Approach):
     # ------------------------------------------------------------------
 
     def post_train_process(self, t, trn_loader):
+        """Freeze dist_head[t] and save a frozen teacher copy of the model."""
         for param in self.model.heads_dist[t].parameters():
             param.requires_grad = False
 
@@ -56,6 +44,7 @@ class Appr(Incremental_Learning_Approach):
         self.model_old.freeze_all()
 
     def train_epoch(self, t, trn_loader):
+        """Runs a single epoch."""
         self.model.train()
         for images, targets in trn_loader:
             outputs_old = None
@@ -132,6 +121,7 @@ class Appr(Incremental_Learning_Approach):
     # ------------------------------------------------------------------
 
     def cross_entropy(self, outputs, targets, exp=1.0, size_average=True, eps=1e-5):
+        """Cross-entropy with temperature scaling — used for knowledge distillation."""
         out = F.softmax(outputs, dim=1)
         tar = F.softmax(targets, dim=1)
         if exp != 1:
@@ -147,29 +137,32 @@ class Appr(Incremental_Learning_Approach):
         return ce
 
     def criterion(self, t, outputs, targets, outputs_old):
+        """Returns the loss value"""
         loss        = 0
         cls_logits  = outputs['cls_logits']
         dist_logits = outputs['dist_logits']
 
         if t > 0:
-            # KD on cls logits (old tasks)
+            # Loss 1: soft KD on cls logits for old tasks
             loss += self.lamb * self.cross_entropy(
                 torch.cat(cls_logits[:t], dim=1),
                 torch.cat(outputs_old['cls_logits'][:t], dim=1),
                 exp=1.0 / self.T
             )
-            # KD on dist logits (old tasks) — backbone regularization via frozen dist_heads
+            # Loss 2: soft KD on dist logits for old tasks
             loss += self.lamb_dist_kd * self.cross_entropy(
                 torch.cat(dist_logits[:t], dim=1),
                 torch.cat(outputs_old['dist_logits'][:t], dim=1),
                 exp=1.0 / self.T
             )
-            # Cosine loss on dist features
+            # Loss 3: cosine loss on dist features
             student_dist = F.normalize(outputs['dist_features'],     dim=-1)
             teacher_dist = F.normalize(outputs_old['dist_features'], dim=-1)
             loss += self.lamb_cos * (1 - (student_dist * teacher_dist).sum(dim=-1).mean())
 
+        # Loss 4: CE with GT on current task — cls head
         loss += F.cross_entropy(cls_logits[t], targets - self.model.task_offset[t])
+        # Loss 5: CE with GT on current task — dist head
         loss += self.lamb_dist * F.cross_entropy(dist_logits[t], targets - self.model.task_offset[t])
 
         return loss
@@ -179,6 +172,7 @@ class Appr(Incremental_Learning_Approach):
     # ------------------------------------------------------------------
 
     def load_progress(self, results_path, task):
+        """Restore model_old from the current (already-loaded) model state."""
         self.model_old = deepcopy(self.model)
         self.model_old.eval()
         self.model_old.freeze_all()
