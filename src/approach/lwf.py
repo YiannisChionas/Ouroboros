@@ -3,9 +3,6 @@ import torch.nn.functional as F
 from copy import deepcopy
 
 from .incremental_learning import Incremental_Learning_Approach
-from datasets.exemplars_dataset import ExemplarsDataset
-
-
 
 class Appr(Incremental_Learning_Approach):
     """Learning Without Forgetting (https://arxiv.org/abs/1606.09282)
@@ -64,7 +61,7 @@ class Appr(Incremental_Learning_Approach):
                 loss = self.criterion(t, outputs, targets.to(self.device), targets_old)
 
                 hits_taw, hits_tag = self.calculate_metrics(outputs, targets)
-                
+
                 total_loss += loss.item() * len(targets)
                 total_acc_taw += hits_taw.sum().item()
                 total_acc_tag += hits_tag.sum().item()
@@ -73,24 +70,11 @@ class Appr(Incremental_Learning_Approach):
         return total_loss / total_num, total_acc_taw / total_num, total_acc_tag / total_num
 
     # ------------------------------------------------------------------
-    # Checkpoint
-    # ------------------------------------------------------------------
-
-    def save_progress(self, results_path, task):
-        # Base implementation does nothing.
-        # Override in subclass if your approach needs to persist state on pause
-        # (e.g. exemplars, model_old, fisher matrices) so that resume works correctly.
-        pass
-
-    # ------------------------------------------------------------------
     # Resume
     # ------------------------------------------------------------------
 
     def load_progress(self, results_path, task):
-        """On resume: reconstruct model_old from the loaded checkpoint.
-        The trainer has already loaded the model weights from task `task` into self.model,
-        so deepcopy gives us exactly the teacher we need for the next task.
-        """
+        """Restore model_old from the current (already-loaded) model state."""
         self.model_old = deepcopy(self.model)
         self.model_old.eval()
         self.model_old.freeze_all()
@@ -101,8 +85,8 @@ class Appr(Incremental_Learning_Approach):
 
     def cross_entropy(self, outputs, targets, exp=1.0, size_average=True, eps=1e-5):
         """Cross-entropy with temperature scaling — used for knowledge distillation."""
-        out = torch.nn.functional.softmax(outputs, dim=1)
-        tar = torch.nn.functional.softmax(targets, dim=1)
+        out = F.softmax(outputs, dim=1)
+        tar = F.softmax(targets, dim=1)
         if exp != 1:
             out = out.pow(exp)
             out = out / out.sum(1).view(-1, 1).expand_as(out)

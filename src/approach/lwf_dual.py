@@ -3,8 +3,6 @@ import torch.nn.functional as F
 from copy import deepcopy
 
 from .incremental_learning import Incremental_Learning_Approach
-from datasets.exemplars_dataset import ExemplarsDataset
-
 
 class Appr(Incremental_Learning_Approach):
     """LwF Dual (https://TODO)
@@ -87,7 +85,7 @@ class Appr(Incremental_Learning_Approach):
     # ------------------------------------------------------------------
 
     def cross_entropy(self, outputs, targets, exp=1.0, size_average=True, eps=1e-5):
-        """Soft cross-entropy with optional temperature scaling."""
+        """Cross-entropy with temperature scaling — used for knowledge distillation."""
         out = F.softmax(outputs, dim=1)
         tar = F.softmax(targets, dim=1)
         if exp != 1:
