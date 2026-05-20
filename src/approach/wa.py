@@ -34,10 +34,7 @@ class Appr(Incremental_Learning_Approach):
         return ExemplarsDataset
 
     def _get_optimizer(self):
-        if self.exemplars_dataset is None and len(self.model.heads) > 1:
-            params_all = list(self.model.model.parameters()) + list(self.model.heads[-1].parameters())
-        else:
-            params_all = list(self.model.parameters())
+        params_all = list(self.model.parameters())
         params = [p for p in params_all if p.requires_grad]
         return torch.optim.SGD(params, lr=self.lr, weight_decay=self.weight_decay, momentum=self.momentum)
 
