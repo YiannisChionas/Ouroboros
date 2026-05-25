@@ -64,9 +64,9 @@ class RandomExemplarsSelector(ExemplarsSelector):
             # get all indices from current class -- check if there are exemplars from previous task in the loader
             cls_ind = np.where(labels == curr_cls)[0]
             assert (len(cls_ind) > 0), "No samples to choose from for class {:d}".format(curr_cls)
-            assert (exemplars_per_class <= len(cls_ind)), "Not enough samples to store"
+            n = min(exemplars_per_class, len(cls_ind))
             # select the exemplars randomly
-            result.extend(random.sample(list(cls_ind), exemplars_per_class))
+            result.extend(random.sample(list(cls_ind), n))
         return result
 
     def _get_labels(self, sel_loader):
@@ -111,7 +111,7 @@ class HerdingExemplarsSelector(ExemplarsSelector):
             # get all indices from current class
             cls_ind = np.where(extracted_targets == curr_cls)[0]
             assert (len(cls_ind) > 0), "No samples to choose from for class {:d}".format(curr_cls)
-            assert (exemplars_per_class <= len(cls_ind)), "Not enough samples to store"
+            n = min(exemplars_per_class, len(cls_ind))
             # get all extracted features for current class
             cls_feats = extracted_features[cls_ind]
             # calculate the mean
@@ -119,7 +119,7 @@ class HerdingExemplarsSelector(ExemplarsSelector):
             # select the exemplars closer to the mean of each class
             selected = []
             selected_feat = []
-            for k in range(exemplars_per_class):
+            for k in range(n):
                 # fix this to the dimension of the model features
                 sum_others = torch.zeros(cls_feats.shape[1])
                 for j in selected_feat:
@@ -166,14 +166,14 @@ class EntropyExemplarsSelector(ExemplarsSelector):
             # get all indices from current class
             cls_ind = np.where(extracted_targets == curr_cls)[0]
             assert (len(cls_ind) > 0), "No samples to choose from for class {:d}".format(curr_cls)
-            assert (exemplars_per_class <= len(cls_ind)), "Not enough samples to store"
+            n = min(exemplars_per_class, len(cls_ind))
             # get all extracted features for current class
             cls_logits = extracted_logits[cls_ind]
             # select the exemplars with higher entropy (lower: -entropy)
             probs = torch.softmax(cls_logits, dim=1)
             log_probs = torch.log(probs)
             minus_entropy = (probs * log_probs).sum(1)  # change sign of this variable for inverse order
-            selected = cls_ind[minus_entropy.sort()[1][:exemplars_per_class]]
+            selected = cls_ind[minus_entropy.sort()[1][:n]]
             result.extend(selected)
         return result
     
@@ -206,12 +206,12 @@ class DistanceExemplarsSelector(ExemplarsSelector):
             # get all indices from current class
             cls_ind = np.where(extracted_targets == curr_cls)[0]
             assert (len(cls_ind) > 0), "No samples to choose from for class {:d}".format(curr_cls)
-            assert (exemplars_per_class <= len(cls_ind)), "Not enough samples to store"
+            n = min(exemplars_per_class, len(cls_ind))
             # get all extracted features for current class
             cls_logits = extracted_logits[cls_ind]
             # select the exemplars closer to boundary
             distance = cls_logits[:, curr_cls]  # change sign of this variable for inverse order
-            selected = cls_ind[distance.sort()[1][:exemplars_per_class]]
+            selected = cls_ind[distance.sort()[1][:n]]
             result.extend(selected)
         return result
 
