@@ -3,7 +3,7 @@
 #SBATCH --partition=yoda
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=4
-#SBATCH --time=07:00:00
+#SBATCH --time=05:00:00
 #SBATCH --output=/home/it219111/experiments/Ouroboros/logs/%x/%x-%j.out
 #SBATCH --error=/home/it219111/experiments/Ouroboros/logs/%x/%x-%j.err
 
