@@ -50,8 +50,7 @@ Current available approaches include:
   • iCaRL
   • EWC
   • EEIL
-  • WA ( Needs Verification )
-  • DMC ( Coming Sooon ...)
+  • DMC ( Coming Soon ...)
   • BiC
   • LUCIR
   • SimpleCIL
@@ -99,24 +98,20 @@ cd ouroboros
 
 </details>
 
-To run the basic code:
+To run an experiment, pass a JSON config file:
 ```
-python3 -u src/main_incremental.py
+python3 -u src/main_incremental.py --config configs/resnet50_in1k/cifar100/finetuning.json
 ```
-More options are explained in the [`src`](./src), including GridSearch usage. Also, more specific options on approaches,
-loggers, datasets and networks.
+All training parameters (dataset, network, approach, hyperparameters) are defined in the config file.
+See the [`src`](./src) folder for more details on approaches, loggers, datasets and networks.
 
 ### Scripts
-<!-- TODO: add scripts folder with reproduction scripts -->
-We provide scripts to reproduce the specific scenarios proposed in 
-_**Class-incremental learning: survey and performance evaluation**_:
-
-* CIFAR-100 (10 tasks) with ResNet-32 without exemplars
-* CIFAR-100 (10 tasks) with ResNet-32 with fixed and growing memory
-* _MORE COMING SOON..._
-
-All scripts run 10 times to later calculate mean and standard deviation of the results.
-Check out all available in the [scripts](scripts) folder.
+SLURM scripts for all supported backbone/dataset/approach combinations are provided in the [`slurm/`](./slurm) folder.
+Each script takes `START_TASK` and `STOP_TASK` environment variables and is designed to be chained by the
+[`slurm/general.sh`](./slurm/general.sh) launcher:
+```
+bash slurm/general.sh slurm/resnet50_in1k/cifar100/finetuning.sh 10
+```
 
 ## License
 Please check the MIT license that is listed in this repository.

@@ -1,12 +1,16 @@
 # Loggers
 
-We include a disk logger, which logs into files and folders in the disk. We also provide a tensorboard logger which
-provides a faster way of analysing a training process without need of further development. They can be specified with
-`--log` followed by `disk`, `tensorboard` or both. Custom loggers can be defined by inheriting the `ExperimentLogger`
-in [exp_logger.py](exp_logger.py).
+Loggers are configured via the `"log"` key in the JSON config:
+```json
+"log": ["disk"]
+```
+or, to enable both:
+```json
+"log": ["disk", "tensorboard"]
+```
 
-When enabled, both loggers will output everything in the path `[RESULTS_PATH]/[DATASETS]_[APPROACH]_[EXP_NAME]` or
-`[RESULTS_PATH]/[DATASETS]_[APPROACH]` if `--exp-name` is not set.
+The output directory is controlled by `"experiment_path"` (optional). If not set, it is automatically
+derived as `{network}/{dataset}/{approach}/{increment}`. Results are written under `"results_path"` (default `"./results"`).
 
 ## Disk logger
 The disk logger outputs the following file and folder structure:
@@ -16,20 +20,20 @@ The disk logger outputs the following file and folder structure:
   - **acc_tag**: task-agnostic accuracy table.
   - **acc_taw**: task-aware accuracy table.
   - **avg_acc_tag**: task-agnostic average accuracies.
-  - **avg_acc_taw**: task-agnostic average accuracies.
+  - **avg_acc_taw**: task-aware average accuracies.
   - **forg_tag**: task-agnostic forgetting table.
   - **forg_taw**: task-aware forgetting table.
-  - **wavg_acc_tag**: task-agnostic average accuracies weighted according to the number of classes of each task.
-  - **wavg_acc_taw**: task-aware average accuracies weighted according to the number of classes of each task.
-- **raw_log**: json file containing all the logged metrics easily read by many tools (e.g. `pandas`).
-- stdout: a copy from the standard output of the terminal.
-- stderr: a copy from the error output of the terminal.
+  - **wavg_acc_tag**: task-agnostic weighted average accuracies.
+  - **wavg_acc_taw**: task-aware weighted average accuracies.
+- **raw_log**: JSON file containing all logged metrics (easily read with e.g. `pandas`).
+- stdout: a copy of the standard output.
+- stderr: a copy of the error output.
 
 ## TensorBoard logger
-The tensorboard logger outputs analogous metrics to the disk logger separated into different tabs according to the task
-and different graphs according to the data splits.
+The TensorBoard logger outputs analogous metrics to the disk logger separated into different tabs
+according to the task and different graphs according to the data splits.
 
-Screenshot for a 10 task experiment, showing the last task plots:
+Screenshot for a 10-task experiment, showing the last task plots:
 <p align="center">
 <img src="/docs/_static/tb2.png" alt="Tensorboard Screenshot" width="920"/>
 </p>
