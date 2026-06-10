@@ -12,6 +12,22 @@ from datasets.exemplars_dataset import ExemplarsDataset
 from networks.network import LLL_Net
 
 
+def _pil_only_transform(transform):
+    """Return a transform with only PIL-compatible ops (before ToTensor).
+
+    Exemplars are stored as uint8 numpy arrays so they can be re-loaded as PIL
+    images and augmented during training. Applying Resize/CenterCrop here keeps
+    stored images at 224×224 instead of original resolution, avoiding OOM.
+    """
+    from torchvision import transforms as T
+    ops = []
+    for t in getattr(transform, 'transforms', [transform]):
+        if isinstance(t, T.ToTensor):
+            break
+        ops.append(t)
+    return T.Compose(ops) if ops else (lambda x: x)
+
+
 class ExemplarsSelector:
     """Exemplar selector for approaches with an interface of Dataset"""
 
@@ -26,7 +42,8 @@ class ExemplarsSelector:
             sel_loader = DataLoader(ds_for_selection, batch_size=trn_loader.batch_size, shuffle=False,
                                     num_workers=trn_loader.num_workers, pin_memory=trn_loader.pin_memory)
             selected_indices = self._select_indices(model, sel_loader, exemplars_per_class, transform)
-        with override_dataset_transform(trn_loader.dataset, Lambda(lambda x: np.array(x))) as ds_for_raw:
+        store_transform = _pil_only_transform(transform)
+        with override_dataset_transform(trn_loader.dataset, Lambda(lambda x: np.array(store_transform(x)))) as ds_for_raw:
             x, y = zip(*(ds_for_raw[idx] for idx in selected_indices))
         clock1 = time.time()
         print('| Selected {:d} train exemplars, time={:5.1f}s'.format(len(x), clock1 - clock0))
