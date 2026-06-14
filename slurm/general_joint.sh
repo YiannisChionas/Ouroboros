@@ -1,16 +1,19 @@
 #!/bin/bash
-# Usage: bash general_joint.sh <job_script> <num_tasks> <nepochs>
+# Usage: bash general_joint.sh <job_script> <num_tasks> <nepochs> [SPLIT1] [SPLIT2]
 #
 # Submits joint training jobs with epoch-based splitting per task.
 # Split scheme (based on dataset size growth):
-#   tasks 0   to SPLIT1-1 : 1 job  per task (full nepochs in one job)
-#   tasks SPLIT1 to SPLIT2-1: 2 jobs per task (nepochs/2 each)
-#   tasks SPLIT2 to end     : 4 jobs per task (nepochs/4 each)
+#   tasks 0       to SPLIT1-1 : 1 job  per task (full nepochs in one job)
+#   tasks SPLIT1  to SPLIT2-1 : 2 jobs per task (nepochs/2 each)
+#   tasks SPLIT2  to end      : 4 jobs per task (nepochs/4 each)
+#
+# SPLIT1 and SPLIT2 default to 5 and 8 (for 10-task datasets).
+# For inat200 (20 tasks) use SPLIT1=10 SPLIT2=15.
 #
 # Example:
 #   bash general_joint.sh vit_small_in1k/cifar100/joint.sh 10 50
 #   bash general_joint.sh vit_small_in1k/food101/joint.sh  10 70
-#   bash general_joint.sh vit_small_in1k/inat200/joint.sh  20 90
+#   bash general_joint.sh resnet50_in1k/inat200/joint.sh   20 90 10 15
 
 set -euo pipefail
 
@@ -18,10 +21,8 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 JOB_SCRIPT="${SCRIPT_DIR}/$1"
 NUM_TASKS="$2"
 NEPOCHS="$3"
-
-# Split thresholds — tasks 0-4: 1 job, 5-7: 2 jobs, 8+: 4 jobs
-SPLIT1=5
-SPLIT2=8
+SPLIT1="${4:-5}"
+SPLIT2="${5:-8}"
 
 if [ ! -f "$JOB_SCRIPT" ]; then
     echo "ERROR: Job script not found: $JOB_SCRIPT"
