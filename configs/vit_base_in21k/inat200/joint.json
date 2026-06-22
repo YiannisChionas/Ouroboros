@@ -17,7 +17,7 @@
     "clipping": 10000,
     "num_workers": 2,
     "pin_memory": false,
-    "gpus": [0, 1],
+    "gpus": [0],
     "seed": 0,
     "results_path": "./results",
     "experiment_path": null,
