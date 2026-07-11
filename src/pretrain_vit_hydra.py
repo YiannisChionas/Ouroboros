@@ -15,10 +15,16 @@ import argparse
 import os
 import sys
 
+import glob
+import io
+import random
+
+import pyarrow.parquet as pq
 import torch
 import torch.nn.functional as F
 import timm
-from torch.utils.data import DataLoader
+from PIL import Image
+from torch.utils.data import DataLoader, IterableDataset
 from torchvision import transforms
 
 sys.path.insert(0, os.path.dirname(__file__))
@@ -44,41 +50,39 @@ def kd_loss(student_logits, teacher_logits, T):
     ) * (T * T) / student_logits.numel()
 
 
-def build_loader(data_path, batch_size, num_workers):
-    from datasets import load_dataset
+class ImageNetParquet(IterableDataset):
+    """Streams ImageNet-1K from HuggingFace Parquet files via pyarrow."""
 
+    def __init__(self, data_path, transform):
+        self.files = sorted(glob.glob(os.path.join(data_path, 'data', 'train-*.parquet')))
+        self.transform = transform
+
+    def __iter__(self):
+        worker = torch.utils.data.get_worker_info()
+        files = list(self.files)
+        random.shuffle(files)
+        if worker is not None:
+            files = files[worker.id::worker.num_workers]
+        for f in files:
+            table = pq.read_table(f, columns=['image', 'label'])
+            indices = list(range(len(table)))
+            random.shuffle(indices)
+            for i in indices:
+                img_bytes = table['image'][i].as_py()['bytes']
+                label = table['label'][i].as_py()
+                img = Image.open(io.BytesIO(img_bytes)).convert('RGB')
+                yield self.transform(img), label
+
+
+def build_loader(data_path, batch_size, num_workers):
     transform = transforms.Compose([
         transforms.Resize(256),
         transforms.CenterCrop(224),
         transforms.ToTensor(),
         transforms.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD),
     ])
-
-    ds = load_dataset(
-        'parquet',
-        data_files=os.path.join(data_path, 'data', 'train-*.parquet'),
-        split='train',
-    )
-
-    def apply_transform(batch):
-        batch['pixel_values'] = [transform(img.convert('RGB')) for img in batch['image']]
-        return batch
-
-    ds.set_transform(apply_transform)
-
-    def collate_fn(samples):
-        images = torch.stack([s['pixel_values'] for s in samples])
-        labels = torch.tensor([s['label'] for s in samples])
-        return images, labels
-
-    return DataLoader(
-        ds,
-        batch_size=batch_size,
-        shuffle=True,
-        num_workers=num_workers,
-        collate_fn=collate_fn,
-        pin_memory=True,
-    )
+    ds = ImageNetParquet(data_path, transform)
+    return DataLoader(ds, batch_size=batch_size, num_workers=num_workers, pin_memory=True)
 
 
 def main():
@@ -143,6 +147,7 @@ def main():
     for epoch in range(start_epoch, end_epoch):
         model.train()
         total_loss = 0.0
+        steps = 0
 
         for i, (images, _) in enumerate(loader):
             images = images.to(device)
@@ -160,10 +165,11 @@ def main():
             optimizer.step()
 
             total_loss += loss.item()
+            steps += 1
             if i % 200 == 0:
-                print(f'  [{epoch}/{args.epochs}][{i}/{len(loader)}] loss: {loss.item():.4f}')
+                print(f'  [{epoch}/{args.epochs}][{i}] loss: {loss.item():.4f}')
 
-        print(f'Epoch {epoch} — avg loss: {total_loss / len(loader):.4f}')
+        print(f'Epoch {epoch} — avg loss: {total_loss / steps:.4f}')
         torch.save({
             'epoch':      epoch,
             'mlp_cls':    model.mlp_cls.state_dict(),
