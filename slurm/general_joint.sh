@@ -23,6 +23,7 @@ NUM_TASKS="$2"
 NEPOCHS="$3"
 SPLIT1="${4:-5}"
 SPLIT2="${5:-8}"
+INITIAL_DEP="${6:-}"
 
 if [ ! -f "$JOB_SCRIPT" ]; then
     echo "ERROR: Job script not found: $JOB_SCRIPT"
@@ -65,6 +66,9 @@ for task in $(seq 0 $((NUM_TASKS - 1))); do
         elif [ -n "$prev_jid" ]; then
             # First epoch-job of this task: wait for last job of previous task
             DEP="--dependency=afterok:${prev_jid}"
+        elif [ -n "$INITIAL_DEP" ]; then
+            # Very first job: wait for external dependency (chaining approaches)
+            DEP="--dependency=afterany:${INITIAL_DEP}"
         else
             DEP=""
         fi
@@ -83,3 +87,4 @@ done
 
 echo ""
 echo "Done. All jobs submitted."
+echo "last_job=$prev_jid"

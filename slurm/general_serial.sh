@@ -63,3 +63,4 @@ done
 
 echo "All tasks $START_FROM→$NUM_TASKS submitted."
 echo "first_job=$first_jobid"
+echo "last_job=$prev_jobid"
