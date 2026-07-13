@@ -11,6 +11,7 @@ import utils
 from loggers.exp_logger import MultiLogger
 from networks.network import LLL_Net
 from networks.distil_network import LLL_Net_Distilled
+from networks.distil_network_hydra import LLL_Net_Hydra
 from approach.incremental_learning import Incremental_Learning_Approach
 from networks import tvmodels, timmmodels, set_model_head_var
 from last_layer_analysis import last_layer_analysis
@@ -84,7 +85,9 @@ def train(args):
         test_loader = validation_loader
 
     utils.seed_everything(seed=args['seed'])
-    if args.get('distilled', False):
+    if args.get('hydra', False):
+        net = LLL_Net_Hydra(init_model, args['approach_args']['mlp_weights'])
+    elif args.get('distilled', False):
         net = LLL_Net_Distilled(init_model, remove_existing_head=False)
     else:
         net = LLL_Net(init_model, remove_existing_head=False)
@@ -159,7 +162,7 @@ def train(args):
         _save_metrics(task=task, results_path=args['results_path'], logger=logger, metrics=metrics,
                       classes_per_task=classes_per_task, network=net)
         if task == total_tasks - 1 and args['last_layer_analysis']:
-            heads_dist = net.heads_dist if isinstance(net, LLL_Net_Distilled) else None
+            heads_dist = net.heads_dist if isinstance(net, (LLL_Net_Distilled, LLL_Net_Hydra)) else None
             figs = last_layer_analysis(net.heads, heads_dist, task, classes_per_task, y_lim=True)
             if len(figs) == 4:
                 f_w, f_b, f_wd, f_bd = figs
