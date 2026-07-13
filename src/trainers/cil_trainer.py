@@ -86,7 +86,7 @@ def train(args):
 
     utils.seed_everything(seed=args['seed'])
     if args.get('hydra', False):
-        net = LLL_Net_Hydra(init_model, args['approach_args']['mlp_weights'])
+        net = LLL_Net_Hydra(init_model, args['approach_args'].get('mlp_weights'))
     elif args.get('distilled', False):
         net = LLL_Net_Distilled(init_model, remove_existing_head=False)
     else:

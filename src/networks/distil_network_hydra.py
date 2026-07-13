@@ -16,7 +16,7 @@ class LLL_Net_Hydra(nn.Module):
     mlp_cls and mlp_dist are loaded from a pretrained checkpoint and kept frozen.
     """
 
-    def __init__(self, model, mlp_weights_path):
+    def __init__(self, model, mlp_weights_path=None):
         super().__init__()
         self.model = model
         self.out_size = model.num_features
@@ -24,9 +24,13 @@ class LLL_Net_Hydra(nn.Module):
         self.mlp_cls  = MLP(self.out_size)
         self.mlp_dist = MLP(self.out_size)
 
-        ckpt = torch.load(mlp_weights_path, map_location='cpu')
-        self.mlp_cls.load_state_dict(ckpt['mlp_cls'])
-        self.mlp_dist.load_state_dict(ckpt['mlp_dist'])
+        if mlp_weights_path is not None:
+            ckpt = torch.load(mlp_weights_path, map_location='cpu')
+            self.mlp_cls.load_state_dict(ckpt['mlp_cls'])
+            self.mlp_dist.load_state_dict(ckpt['mlp_dist'])
+            print(f'Loaded MLP weights from {mlp_weights_path}')
+        else:
+            print('MLPs randomly initialized (control experiment)')
         for p in self.mlp_cls.parameters():  p.requires_grad = False
         for p in self.mlp_dist.parameters(): p.requires_grad = False
 
