@@ -1,0 +1,91 @@
+START_TASK=5 STOP_TASK=6 START_EPOCH=0 STOP_EPOCH=25
+============================================================================================================
+Arguments =
+	all_outputs: False
+	approach: joint
+	batch_size: 64
+	classes_first_task: None
+	clipping: 10000
+	crop: 224
+	dataset: cifar100
+	eval_on_train: False
+	experiment_path: None
+	fix_bn: False
+	freeze_backbone: False
+	gpu: 0
+	gpus: [0]
+	increment: 10
+	last_layer_analysis: False
+	log: ['disk']
+	lr: 0.01
+	lr_factor: None
+	lr_min: 0.0001
+	lr_patience: None
+	lr_scheduler: cosine
+	lr_warmup_epochs: 0
+	momentum: 0.0
+	multi_softmax: False
+	nepochs: 50
+	network: resnet50.a1_in1k
+	no_cudnn_deterministic: False
+	normalize: in1k
+	num_workers: 2
+	optimizer_name: sgd
+	pin_memory: False
+	pretrained: True
+	resize: 224
+	results_path: ./results
+	save_models: True
+	seed: 0
+	start_at_task: 5
+	start_epoch: 0
+	stop_at_task: 6
+	stop_epoch: 25
+	use_valid_only: False
+	warmup_lr_factor: 1.0
+	warmup_nepochs: 0
+	weight_decay: 0.0
+============================================================================================================
+Approach arguments =
+============================================================================================================
+Exemplars arguments =
+============================================================================================================
+WARNING: ./results/resnet50.a1_in1k/cifar100/joint/10 already exists!
+Loaded acc_taw from: ./results/resnet50.a1_in1k/cifar100/joint/10/acc_taw-4.txt
+Loaded acc_tag from: ./results/resnet50.a1_in1k/cifar100/joint/10/acc_tag-4.txt
+Loaded forg_taw from: ./results/resnet50.a1_in1k/cifar100/joint/10/forg_taw-4.txt
+Loaded forg_tag from: ./results/resnet50.a1_in1k/cifar100/joint/10/forg_tag-4.txt
+[joint] Loaded accumulated datasets up to task 4 from ./results/resnet50.a1_in1k/cifar100/joint/10/joint_progress
+************************************************************************************************************
+Task  5  [epochs 0-25]
+************************************************************************************************************
+[params] total:23,630,972  trainable:23,630,972  tensors:171  trainable_tensors:171
+| Epoch   1, time= 46.3s | Train: skip eval | Valid: time=  3.7s loss=0.905, TAw acc= 91.9% | * lr=1.0e-02
+| Epoch   2, time= 53.8s | Train: skip eval | Valid: time=  3.9s loss=0.722, TAw acc= 92.6% | * lr=1.0e-02
+| Epoch   3, time= 50.4s | Train: skip eval | Valid: time=  3.7s loss=0.655, TAw acc= 92.8% | * lr=9.9e-03
+| Epoch   4, time= 44.3s | Train: skip eval | Valid: time=  3.7s loss=0.630, TAw acc= 93.2% | * lr=9.8e-03
+| Epoch   5, time= 51.8s | Train: skip eval | Valid: time=  3.6s loss=0.617, TAw acc= 93.0% | * lr=9.8e-03
+| Epoch   6, time= 49.8s | Train: skip eval | Valid: time=  3.6s loss=0.591, TAw acc= 93.6% | * lr=9.7e-03
+| Epoch   7, time= 42.8s | Train: skip eval | Valid: time=  3.7s loss=0.566, TAw acc= 93.7% | * lr=9.5e-03
+| Epoch   8, time= 48.4s | Train: skip eval | Valid: time=  4.0s loss=0.564, TAw acc= 93.6% | * lr=9.4e-03
+| Epoch   9, time= 49.3s | Train: skip eval | Valid: time=  3.4s loss=0.563, TAw acc= 93.7% | * lr=9.2e-03
+| Epoch  10, time= 47.8s | Train: skip eval | Valid: time=  3.5s loss=0.547, TAw acc= 93.7% | * lr=9.1e-03
+| Epoch  11, time= 47.2s | Train: skip eval | Valid: time=  3.7s loss=0.547, TAw acc= 94.0% | * lr=8.9e-03
+| Epoch  12, time= 47.4s | Train: skip eval | Valid: time=  4.2s loss=0.534, TAw acc= 94.1% | * lr=8.7e-03
+| Epoch  13, time= 47.1s | Train: skip eval | Valid: time=  3.7s loss=0.532, TAw acc= 94.2% | * lr=8.4e-03
+| Epoch  14, time= 47.5s | Train: skip eval | Valid: time=  3.7s loss=0.531, TAw acc= 94.2% | * lr=8.2e-03
+| Epoch  15, time= 48.2s | Train: skip eval | Valid: time=  3.6s loss=0.524, TAw acc= 94.1% | * lr=8.0e-03
+| Epoch  16, time= 42.5s | Train: skip eval | Valid: time=  3.7s loss=0.523, TAw acc= 94.4% | * lr=7.7e-03
+| Epoch  17, time= 52.3s | Train: skip eval | Valid: time=  3.6s loss=0.511, TAw acc= 94.3% | * lr=7.4e-03
+| Epoch  18, time= 46.9s | Train: skip eval | Valid: time=  3.6s loss=0.516, TAw acc= 94.2% | lr=7.2e-03
+| Epoch  19, time= 48.0s | Train: skip eval | Valid: time=  4.9s loss=0.516, TAw acc= 93.9% | lr=6.9e-03
+| Epoch  20, time= 56.4s | Train: skip eval | Valid: time=  3.7s loss=0.516, TAw acc= 94.4% | lr=6.6e-03
+| Epoch  21, time= 43.9s | Train: skip eval | Valid: time=  3.7s loss=0.503, TAw acc= 94.4% | * lr=6.3e-03
+| Epoch  22, time= 47.2s | Train: skip eval | Valid: time=  3.7s loss=0.498, TAw acc= 94.4% | * lr=6.0e-03
+| Epoch  23, time= 46.9s | Train: skip eval | Valid: time=  3.5s loss=0.504, TAw acc= 94.3% | lr=5.7e-03
+| Epoch  24, time= 48.5s | Train: skip eval | Valid: time=  3.6s loss=0.500, TAw acc= 94.5% | lr=5.4e-03
+| Epoch  25, time= 45.5s | Train: skip eval | Valid: time=  3.5s loss=0.501, TAw acc= 94.2% | lr=5.1e-03
+------------------------------------------------------------------------------------------------------------
+[joint] Saved accumulated datasets up to task 5 → ./results/resnet50.a1_in1k/cifar100/joint/10/joint_progress
+[Elapsed time = 0.4 h]
+Done!

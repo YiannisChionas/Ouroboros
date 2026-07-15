@@ -1,0 +1,78 @@
+START_TASK=9 STOP_TASK=10 START_EPOCH=24 STOP_EPOCH=36
+============================================================================================================
+Arguments =
+	all_outputs: False
+	approach: joint
+	batch_size: 64
+	classes_first_task: None
+	clipping: 10000
+	crop: 224
+	dataset: cifar100
+	eval_on_train: False
+	experiment_path: None
+	fix_bn: False
+	freeze_backbone: False
+	gpu: 0
+	gpus: [0]
+	increment: 10
+	last_layer_analysis: False
+	log: ['disk']
+	lr: 0.01
+	lr_factor: None
+	lr_min: 0.0001
+	lr_patience: None
+	lr_scheduler: cosine
+	lr_warmup_epochs: 0
+	momentum: 0.0
+	multi_softmax: False
+	nepochs: 50
+	network: resnet50.a1_in1k
+	no_cudnn_deterministic: False
+	normalize: in1k
+	num_workers: 2
+	optimizer_name: sgd
+	pin_memory: False
+	pretrained: True
+	resize: 224
+	results_path: ./results
+	save_models: True
+	seed: 0
+	start_at_task: 9
+	start_epoch: 24
+	stop_at_task: 10
+	stop_epoch: 36
+	use_valid_only: False
+	warmup_lr_factor: 1.0
+	warmup_nepochs: 0
+	weight_decay: 0.0
+============================================================================================================
+Approach arguments =
+============================================================================================================
+Exemplars arguments =
+============================================================================================================
+WARNING: ./results/resnet50.a1_in1k/cifar100/joint/10 already exists!
+Loaded acc_taw from: ./results/resnet50.a1_in1k/cifar100/joint/10/acc_taw-8.txt
+Loaded acc_tag from: ./results/resnet50.a1_in1k/cifar100/joint/10/acc_tag-8.txt
+Loaded forg_taw from: ./results/resnet50.a1_in1k/cifar100/joint/10/forg_taw-8.txt
+Loaded forg_tag from: ./results/resnet50.a1_in1k/cifar100/joint/10/forg_tag-8.txt
+[joint] Loaded accumulated datasets up to task 9 from ./results/resnet50.a1_in1k/cifar100/joint/10/joint_progress
+************************************************************************************************************
+Task  9  [epochs 24-36]
+************************************************************************************************************
+[params] total:23,712,932  trainable:23,712,932  tensors:179  trainable_tensors:179
+| Epoch  25, time= 77.6s | Train: skip eval | Valid: time=  6.5s loss=0.781, TAw acc= 95.3% | lr=5.1e-03
+| Epoch  26, time= 74.2s | Train: skip eval | Valid: time=  5.7s loss=0.711, TAw acc= 95.4% | lr=4.7e-03
+| Epoch  27, time= 74.2s | Train: skip eval | Valid: time=  7.1s loss=0.679, TAw acc= 95.7% | lr=4.4e-03
+| Epoch  28, time= 80.0s | Train: skip eval | Valid: time=  5.8s loss=0.662, TAw acc= 95.4% | lr=4.1e-03
+| Epoch  29, time= 70.4s | Train: skip eval | Valid: time=  5.7s loss=0.643, TAw acc= 95.7% | lr=3.8e-03
+| Epoch  30, time= 79.5s | Train: skip eval | Valid: time=  8.7s loss=0.646, TAw acc= 95.6% | lr=3.5e-03
+| Epoch  31, time= 77.3s | Train: skip eval | Valid: time=  5.8s loss=0.635, TAw acc= 95.8% | lr=3.2e-03
+| Epoch  32, time= 80.3s | Train: skip eval | Valid: time=  5.9s loss=0.634, TAw acc= 95.9% | lr=2.9e-03
+| Epoch  33, time= 79.8s | Train: skip eval | Valid: time=  5.4s loss=0.626, TAw acc= 95.7% | lr=2.7e-03
+| Epoch  34, time= 75.5s | Train: skip eval | Valid: time=  5.7s loss=0.627, TAw acc= 95.8% | lr=2.4e-03
+| Epoch  35, time= 79.5s | Train: skip eval | Valid: time=  7.5s loss=0.641, TAw acc= 95.8% | lr=2.1e-03
+| Epoch  36, time= 74.2s | Train: skip eval | Valid: time=  5.5s loss=0.618, TAw acc= 95.9% | lr=1.9e-03
+------------------------------------------------------------------------------------------------------------
+[joint] Saved accumulated datasets up to task 9 → ./results/resnet50.a1_in1k/cifar100/joint/10/joint_progress
+[Elapsed time = 0.3 h]
+Done!

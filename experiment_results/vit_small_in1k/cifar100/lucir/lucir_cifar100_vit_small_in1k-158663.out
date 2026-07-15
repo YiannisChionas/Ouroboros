@@ -1,0 +1,64 @@
+START_TASK=0 STOP_TASK=1
+============================================================================================================
+Arguments =
+	approach: lucir
+	batch_size: 64
+	classes_first_task: None
+	clipping: 10000
+	crop: 224
+	dataset: cifar100
+	eval_on_train: False
+	experiment_path: None
+	fix_bn: False
+	freeze_backbone: False
+	gpu: 0
+	gpus: [0]
+	increment: 10
+	last_layer_analysis: False
+	log: ['disk']
+	lr: 0.01
+	lr_factor: None
+	lr_min: 0.0001
+	lr_patience: None
+	lr_scheduler: cosine
+	lr_warmup_epochs: 0
+	momentum: 0.0
+	multi_softmax: False
+	nepochs: 50
+	network: vit_small_patch16_224.augreg_in1k
+	no_cudnn_deterministic: False
+	normalize: in1k
+	num_workers: 2
+	optimizer_name: sgd
+	pin_memory: False
+	pretrained: True
+	resize: 224
+	results_path: ./results
+	save_models: True
+	seed: 0
+	start_at_task: 0
+	start_epoch: 0
+	stop_at_task: 1
+	stop_epoch: 0
+	use_valid_only: False
+	warmup_lr_factor: 1.0
+	warmup_nepochs: 0
+	weight_decay: 0.0
+============================================================================================================
+Approach arguments =
+	K: 2
+	dist: 0.5
+	lamb: 5.0
+	lamb_mr: 1.0
+============================================================================================================
+Exemplars arguments =
+	exemplar_selection: random
+	num_exemplars: 2000
+============================================================================================================
+************************************************************************************************************
+Task  0  [epochs 0-50]
+************************************************************************************************************
+[params] total:21,669,505  trainable:21,669,505  tensors:152  trainable_tensors:152
+| Epoch   1, time= 11.3s | Train: skip eval | Valid: time=  0.8s loss=2.206, TAw acc= 58.4% | * lr=1.0e-02
+| Epoch   2, time= 11.0s | Train: skip eval | Valid: time=  0.8s loss=2.072, TAw acc= 80.4% | * lr=1.0e-02
+| Epoch   3, time= 10.8s | Train: skip eval | Valid: time=  0.8s loss=1.876, TAw acc= 80.0% | * lr=9.9e-03

@@ -1,0 +1,74 @@
+START_TASK=6 STOP_TASK=7 START_EPOCH=25 STOP_EPOCH=50
+============================================================================================================
+Arguments =
+	all_outputs: False
+	approach: joint_v2
+	batch_size: 64
+	classes_first_task: None
+	clipping: 10000
+	crop: 224
+	dataset: cifar100
+	eval_on_train: False
+	experiment_path: None
+	fix_bn: False
+	freeze_backbone: False
+	gpu: 0
+	increment: 10
+	log: ['disk']
+	lr: 0.01
+	lr_factor: None
+	lr_min: 0.0001
+	lr_patience: None
+	lr_scheduler: cosine
+	lr_warmup_epochs: 0
+	momentum: 0.0
+	multi_softmax: False
+	nepochs: 50
+	network: vit_small_patch16_224.augreg_in1k
+	no_cudnn_deterministic: False
+	normalize: in1k
+	num_workers: 2
+	optimizer_name: sgd
+	pin_memory: False
+	pretrained: True
+	resize: 224
+	results_path: ../results
+	save_models: True
+	seed: 0
+	start_at_task: 6
+	start_epoch: 25
+	stop_at_task: 7
+	stop_epoch: 50
+	use_valid_only: False
+	warmup_lr_factor: 1.0
+	warmup_nepochs: 0
+	weight_decay: 0.0
+============================================================================================================
+Approach arguments =
+============================================================================================================
+Exemplars dataset arguments =
+============================================================================================================
+WARNING: ../results/vit_small_patch16_224.augreg_in1k/cifar100/joint_v2/10 already exists!
+Loaded acc_taw from: ../results/vit_small_patch16_224.augreg_in1k/cifar100/joint_v2/10/acc_taw-5.txt
+Loaded acc_tag from: ../results/vit_small_patch16_224.augreg_in1k/cifar100/joint_v2/10/acc_tag-5.txt
+Loaded forg_taw from: ../results/vit_small_patch16_224.augreg_in1k/cifar100/joint_v2/10/forg_taw-5.txt
+Loaded forg_tag from: ../results/vit_small_patch16_224.augreg_in1k/cifar100/joint_v2/10/forg_tag-5.txt
+[joint] Loaded accumulated datasets up to task 5 from ../results/vit_small_patch16_224.augreg_in1k/cifar100/joint_v2/10/joint_progress
+************************************************************************************************************
+Task  6  [epochs 25-50]
+************************************************************************************************************
+| Epoch  26, time= 55.1s | Train: skip eval | Valid: time=  3.2s loss=0.383, TAw acc= 96.8% | lr=4.7e-03
+| Epoch  27, time= 54.6s | Train: skip eval | Valid: time=  3.2s loss=0.351, TAw acc= 97.2% | * lr=4.4e-03
+| Epoch  28, time= 54.6s | Train: skip eval | Valid: time=  3.3s loss=0.332, TAw acc= 97.2% | * lr=4.1e-03
+| Epoch  29, time= 54.7s | Train: skip eval | Valid: time=  3.4s loss=0.330, TAw acc= 97.0% | * lr=3.8e-03
+| Epoch  30, time= 54.8s | Train: skip eval | Valid: time=  3.1s loss=0.334, TAw acc= 97.0% | lr=3.5e-03
+| Epoch  31, time= 54.6s | Train: skip eval | Valid: time=  3.3s loss=0.337, TAw acc= 97.0% | lr=3.2e-03
+| Epoch  32, time= 55.4s | Train: skip eval | Valid: time=  3.2s loss=0.329, TAw acc= 97.2% | * lr=2.9e-03
+| Epoch  33, time= 55.4s | Train: skip eval | Valid: time=  3.3s loss=0.339, TAw acc= 97.0% | lr=2.7e-03
+| Epoch  34, time= 55.3s | Train: skip eval | Valid: time=  3.1s loss=0.340, TAw acc= 97.0% | lr=2.4e-03
+| Epoch  35, time= 55.2s | Train: skip eval | Valid: time=  3.2s loss=0.326, TAw acc= 97.2% | * lr=2.1e-03
+| Epoch  36, time= 55.4s | Train: skip eval | Valid: time=  3.2s loss=0.338, TAw acc= 97.2% | lr=1.9e-03
+| Epoch  37, time= 55.0s | Train: skip eval | Valid: time=  3.3s loss=0.340, TAw acc= 97.0% | lr=1.7e-03
+| Epoch  38, time= 55.4s | Train: skip eval | Valid: time=  3.2s loss=0.336, TAw acc= 97.0% | lr=1.4e-03
+| Epoch  39, time= 55.2s | Train: skip eval | Valid: time=  3.2s loss=0.332, TAw acc= 97.3% | lr=1.2e-03
+| Epoch  40, time= 55.2s | Train: skip eval | Valid: time=  3.2s loss=0.338, TAw acc= 97.1% | lr=1.0e-03
