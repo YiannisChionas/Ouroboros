@@ -1,0 +1,89 @@
+START_TASK=15 STOP_TASK=16 START_EPOCH=0 STOP_EPOCH=22
+============================================================================================================
+Arguments =
+	all_outputs: False
+	approach: joint
+	batch_size: 64
+	classes_first_task: None
+	clipping: 10000
+	crop: 224
+	data_path: ../data/inat200
+	dataset: inat200
+	eval_on_train: False
+	experiment_path: None
+	fix_bn: False
+	freeze_backbone: False
+	gpu: 0
+	gpus: [0]
+	increment: 10
+	last_layer_analysis: False
+	log: ['disk']
+	lr: 0.01
+	lr_factor: None
+	lr_min: 0.0001
+	lr_patience: None
+	lr_scheduler: cosine
+	lr_warmup_epochs: 0
+	momentum: 0.0
+	multi_softmax: False
+	nepochs: 90
+	network: resnetv2_101x1_bit.goog_in21k
+	no_cudnn_deterministic: False
+	normalize: in21k
+	num_workers: 2
+	optimizer_name: sgd
+	pin_memory: False
+	pretrained: True
+	resize: 224
+	results_path: ./results
+	save_models: True
+	seed: 0
+	start_at_task: 15
+	start_epoch: 0
+	stop_at_task: 16
+	stop_epoch: 22
+	use_valid_only: False
+	warmup_lr_factor: 1.0
+	warmup_nepochs: 0
+	weight_decay: 0.0
+============================================================================================================
+Approach arguments =
+============================================================================================================
+Exemplars arguments =
+============================================================================================================
+WARNING: ./results/resnetv2_101x1_bit.goog_in21k/inat200/joint/10 already exists!
+Loaded acc_taw from: ./results/resnetv2_101x1_bit.goog_in21k/inat200/joint/10/acc_taw-14.txt
+Loaded acc_tag from: ./results/resnetv2_101x1_bit.goog_in21k/inat200/joint/10/acc_tag-14.txt
+Loaded forg_taw from: ./results/resnetv2_101x1_bit.goog_in21k/inat200/joint/10/forg_taw-14.txt
+Loaded forg_tag from: ./results/resnetv2_101x1_bit.goog_in21k/inat200/joint/10/forg_tag-14.txt
+[joint] Loaded accumulated datasets up to task 14 from ./results/resnetv2_101x1_bit.goog_in21k/inat200/joint/10/joint_progress
+************************************************************************************************************
+Task 15  [epochs 0-22]
+************************************************************************************************************
+[params] total:42,820,320  trainable:42,820,320  tensors:336  trainable_tensors:336
+| Epoch   1, time=259.9s | Train: skip eval | Valid: time= 26.4s loss=1.901, TAw acc= 91.7% | * lr=1.0e-02
+| Epoch   2, time=258.9s | Train: skip eval | Valid: time= 25.0s loss=1.860, TAw acc= 91.5% | * lr=1.0e-02
+| Epoch   3, time=261.2s | Train: skip eval | Valid: time= 27.4s loss=1.794, TAw acc= 91.8% | * lr=1.0e-02
+| Epoch   4, time=274.4s | Train: skip eval | Valid: time= 24.1s loss=1.900, TAw acc= 91.8% | lr=1.0e-02
+| Epoch   5, time=250.8s | Train: skip eval | Valid: time= 30.5s loss=1.839, TAw acc= 91.8% | lr=9.9e-03
+| Epoch   6, time=256.9s | Train: skip eval | Valid: time= 23.1s loss=1.860, TAw acc= 91.5% | lr=9.9e-03
+| Epoch   7, time=265.0s | Train: skip eval | Valid: time= 29.6s loss=1.938, TAw acc= 91.1% | lr=9.9e-03
+| Epoch   8, time=254.2s | Train: skip eval | Valid: time= 27.6s loss=1.876, TAw acc= 91.0% | lr=9.8e-03
+| Epoch   9, time=246.1s | Train: skip eval | Valid: time= 24.3s loss=1.873, TAw acc= 91.3% | lr=9.8e-03
+| Epoch  10, time=267.3s | Train: skip eval | Valid: time= 25.6s loss=1.835, TAw acc= 91.2% | lr=9.7e-03
+| Epoch  11, time=257.4s | Train: skip eval | Valid: time= 26.9s loss=1.871, TAw acc= 91.1% | lr=9.6e-03
+| Epoch  12, time=261.6s | Train: skip eval | Valid: time= 27.5s loss=1.876, TAw acc= 91.4% | lr=9.6e-03
+| Epoch  13, time=265.1s | Train: skip eval | Valid: time= 24.8s loss=1.886, TAw acc= 91.5% | lr=9.5e-03
+| Epoch  14, time=253.7s | Train: skip eval | Valid: time= 27.4s loss=1.849, TAw acc= 91.5% | lr=9.4e-03
+| Epoch  15, time=254.0s | Train: skip eval | Valid: time= 26.4s loss=1.826, TAw acc= 91.5% | lr=9.3e-03
+| Epoch  16, time=262.5s | Train: skip eval | Valid: time= 24.6s loss=1.870, TAw acc= 91.3% | lr=9.2e-03
+| Epoch  17, time=267.0s | Train: skip eval | Valid: time= 23.0s loss=1.814, TAw acc= 91.3% | lr=9.2e-03
+| Epoch  18, time=247.9s | Train: skip eval | Valid: time= 24.4s loss=1.803, TAw acc= 91.7% | lr=9.1e-03
+| Epoch  19, time=248.0s | Train: skip eval | Valid: time= 23.7s loss=1.819, TAw acc= 91.5% | lr=9.0e-03
+| Epoch  20, time=240.5s | Train: skip eval | Valid: time= 22.3s loss=1.835, TAw acc= 91.5% | lr=8.8e-03
+| Epoch  21, time=255.4s | Train: skip eval | Valid: time= 21.6s loss=1.808, TAw acc= 91.5% | lr=8.7e-03
+| Epoch  22, time=254.0s | Train: skip eval | Valid: time= 22.6s loss=1.834, TAw acc= 91.6% | lr=8.6e-03
+------------------------------------------------------------------------------------------------------------
+[joint] Saved accumulated datasets up to task 15 → ./results/resnetv2_101x1_bit.goog_in21k/inat200/joint/10/joint_progress
+[Elapsed time = 1.7 h]
+Done!

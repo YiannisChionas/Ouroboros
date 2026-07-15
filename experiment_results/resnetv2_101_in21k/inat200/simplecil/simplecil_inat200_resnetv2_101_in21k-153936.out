@@ -1,0 +1,245 @@
+START_TASK=0 STOP_TASK=10 NUM_TASKS=10
+============================================================================================================
+Arguments =
+	approach: simplecil
+	batch_size: 64
+	clipping: 10000
+	datasets: ['inat200_224_in21k']
+	eval_on_train: False
+	exp_name: simplecil_inat200_resnetv2_101_in21k
+	fix_bn: False
+	freeze_backbone: False
+	gpu: 0
+	gridsearch_tasks: -1
+	keep_existing_head: False
+	last_layer_analysis: False
+	log: ['disk']
+	lr: 0.0
+	lr_factor: None
+	lr_min: None
+	lr_patience: None
+	lr_scheduler: none
+	momentum: 0.0
+	multi_softmax: False
+	nc_first_task: None
+	nepochs: 1
+	network: resnetv2_101x1_bit.goog_in21k
+	no_cudnn_deterministic: False
+	num_tasks: 10
+	num_workers: 2
+	pin_memory: False
+	pretrained: True
+	results_path: /home/it219111/experiments/FACILCUSTOM/results
+	save_models: True
+	seed: 0
+	start_at_task: 0
+	stop_at_task: 10
+	use_valid_only: False
+	warmup_lr_factor: 1.0
+	warmup_nepochs: 0
+	weight_decay: 0.0
+============================================================================================================
+Approach arguments =
+============================================================================================================
+WARNING: /home/it219111/experiments/FACILCUSTOM/results/simplecil_inat200_resnetv2_101_in21k already exists!
+[(0, 20), (1, 20), (2, 20), (3, 20), (4, 20), (5, 20), (6, 20), (7, 20), (8, 20), (9, 20)]
+Loaded latest acc_taw from: /home/it219111/experiments/FACILCUSTOM/results/simplecil_inat200_resnetv2_101_in21k/results/acc_taw-2026-03-19-23-26.txt
+Loaded latest acc_tag from: /home/it219111/experiments/FACILCUSTOM/results/simplecil_inat200_resnetv2_101_in21k/results/acc_tag-2026-03-19-23-26.txt
+Loaded latest forg_taw from: /home/it219111/experiments/FACILCUSTOM/results/simplecil_inat200_resnetv2_101_in21k/results/forg_taw-2026-03-19-23-26.txt
+Loaded latest forg_tag from: /home/it219111/experiments/FACILCUSTOM/results/simplecil_inat200_resnetv2_101_in21k/results/forg_tag-2026-03-19-23-26.txt
+************************************************************************************************************
+Task  0
+************************************************************************************************************
+
+[Task 0] Computing prototypes ...
+   -> Stored 20 prototypes. Total seen classes: 20
+------------------------------------------------------------------------------------------------------------
+>>> Test on task  0 : loss=0.000 | TAw acc= 81.1%, forg=  0.0%| TAg acc= 81.1%, forg=  0.0% <<<
+Save at /home/it219111/experiments/FACILCUSTOM/results/simplecil_inat200_resnetv2_101_in21k
+No exemplars to save for task 0 (Approach: simplecil)
+************************************************************************************************************
+Task  1
+************************************************************************************************************
+
+[Task 1] Computing prototypes ...
+   -> Stored 20 prototypes. Total seen classes: 40
+------------------------------------------------------------------------------------------------------------
+>>> Test on task  0 : loss=0.000 | TAw acc= 81.1%, forg=  0.0%| TAg acc= 74.5%, forg=  6.6% <<<
+>>> Test on task  1 : loss=0.000 | TAw acc= 81.6%, forg=  0.0%| TAg acc= 75.0%, forg=  0.0% <<<
+Save at /home/it219111/experiments/FACILCUSTOM/results/simplecil_inat200_resnetv2_101_in21k
+No exemplars to save for task 1 (Approach: simplecil)
+************************************************************************************************************
+Task  2
+************************************************************************************************************
+
+[Task 2] Computing prototypes ...
+   -> Stored 20 prototypes. Total seen classes: 60
+------------------------------------------------------------------------------------------------------------
+>>> Test on task  0 : loss=0.000 | TAw acc= 81.1%, forg=  0.0%| TAg acc= 66.1%, forg= 15.0% <<<
+>>> Test on task  1 : loss=0.000 | TAw acc= 81.6%, forg=  0.0%| TAg acc= 69.1%, forg=  5.9% <<<
+>>> Test on task  2 : loss=0.000 | TAw acc= 76.6%, forg=  0.0%| TAg acc= 66.1%, forg=  0.0% <<<
+Save at /home/it219111/experiments/FACILCUSTOM/results/simplecil_inat200_resnetv2_101_in21k
+No exemplars to save for task 2 (Approach: simplecil)
+************************************************************************************************************
+Task  3
+************************************************************************************************************
+
+[Task 3] Computing prototypes ...
+   -> Stored 20 prototypes. Total seen classes: 80
+------------------------------------------------------------------------------------------------------------
+>>> Test on task  0 : loss=0.000 | TAw acc= 81.1%, forg=  0.0%| TAg acc= 61.0%, forg= 20.1% <<<
+>>> Test on task  1 : loss=0.000 | TAw acc= 81.6%, forg=  0.0%| TAg acc= 66.5%, forg=  8.5% <<<
+>>> Test on task  2 : loss=0.000 | TAw acc= 76.6%, forg=  0.0%| TAg acc= 63.7%, forg=  2.5% <<<
+>>> Test on task  3 : loss=0.000 | TAw acc= 82.6%, forg=  0.0%| TAg acc= 64.9%, forg=  0.0% <<<
+Save at /home/it219111/experiments/FACILCUSTOM/results/simplecil_inat200_resnetv2_101_in21k
+No exemplars to save for task 3 (Approach: simplecil)
+************************************************************************************************************
+Task  4
+************************************************************************************************************
+
+[Task 4] Computing prototypes ...
+   -> Stored 20 prototypes. Total seen classes: 100
+------------------------------------------------------------------------------------------------------------
+>>> Test on task  0 : loss=0.000 | TAw acc= 81.1%, forg=  0.0%| TAg acc= 54.5%, forg= 26.6% <<<
+>>> Test on task  1 : loss=0.000 | TAw acc= 81.6%, forg=  0.0%| TAg acc= 63.7%, forg= 11.4% <<<
+>>> Test on task  2 : loss=0.000 | TAw acc= 76.6%, forg=  0.0%| TAg acc= 61.5%, forg=  4.6% <<<
+>>> Test on task  3 : loss=0.000 | TAw acc= 82.6%, forg=  0.0%| TAg acc= 63.5%, forg=  1.4% <<<
+>>> Test on task  4 : loss=0.000 | TAw acc= 84.1%, forg=  0.0%| TAg acc= 67.7%, forg=  0.0% <<<
+Save at /home/it219111/experiments/FACILCUSTOM/results/simplecil_inat200_resnetv2_101_in21k
+No exemplars to save for task 4 (Approach: simplecil)
+************************************************************************************************************
+Task  5
+************************************************************************************************************
+
+[Task 5] Computing prototypes ...
+   -> Stored 20 prototypes. Total seen classes: 120
+------------------------------------------------------------------------------------------------------------
+>>> Test on task  0 : loss=0.000 | TAw acc= 81.1%, forg=  0.0%| TAg acc= 51.8%, forg= 29.3% <<<
+>>> Test on task  1 : loss=0.000 | TAw acc= 81.6%, forg=  0.0%| TAg acc= 61.8%, forg= 13.2% <<<
+>>> Test on task  2 : loss=0.000 | TAw acc= 76.6%, forg=  0.0%| TAg acc= 56.8%, forg=  9.3% <<<
+>>> Test on task  3 : loss=0.000 | TAw acc= 82.6%, forg=  0.0%| TAg acc= 62.3%, forg=  2.5% <<<
+>>> Test on task  4 : loss=0.000 | TAw acc= 84.1%, forg=  0.0%| TAg acc= 65.2%, forg=  2.5% <<<
+>>> Test on task  5 : loss=0.000 | TAw acc= 80.3%, forg=  0.0%| TAg acc= 59.8%, forg=  0.0% <<<
+Save at /home/it219111/experiments/FACILCUSTOM/results/simplecil_inat200_resnetv2_101_in21k
+No exemplars to save for task 5 (Approach: simplecil)
+************************************************************************************************************
+Task  6
+************************************************************************************************************
+
+[Task 6] Computing prototypes ...
+   -> Stored 20 prototypes. Total seen classes: 140
+------------------------------------------------------------------------------------------------------------
+>>> Test on task  0 : loss=0.000 | TAw acc= 81.1%, forg=  0.0%| TAg acc= 50.4%, forg= 30.6% <<<
+>>> Test on task  1 : loss=0.000 | TAw acc= 81.6%, forg=  0.0%| TAg acc= 60.0%, forg= 15.0% <<<
+>>> Test on task  2 : loss=0.000 | TAw acc= 76.6%, forg=  0.0%| TAg acc= 54.0%, forg= 12.2% <<<
+>>> Test on task  3 : loss=0.000 | TAw acc= 82.6%, forg=  0.0%| TAg acc= 61.2%, forg=  3.7% <<<
+>>> Test on task  4 : loss=0.000 | TAw acc= 84.1%, forg=  0.0%| TAg acc= 61.9%, forg=  5.8% <<<
+>>> Test on task  5 : loss=0.000 | TAw acc= 80.3%, forg=  0.0%| TAg acc= 58.2%, forg=  1.6% <<<
+>>> Test on task  6 : loss=0.000 | TAw acc= 85.2%, forg=  0.0%| TAg acc= 64.0%, forg=  0.0% <<<
+Save at /home/it219111/experiments/FACILCUSTOM/results/simplecil_inat200_resnetv2_101_in21k
+No exemplars to save for task 6 (Approach: simplecil)
+************************************************************************************************************
+Task  7
+************************************************************************************************************
+
+[Task 7] Computing prototypes ...
+   -> Stored 20 prototypes. Total seen classes: 160
+------------------------------------------------------------------------------------------------------------
+>>> Test on task  0 : loss=0.000 | TAw acc= 81.1%, forg=  0.0%| TAg acc= 47.0%, forg= 34.1% <<<
+>>> Test on task  1 : loss=0.000 | TAw acc= 81.6%, forg=  0.0%| TAg acc= 59.0%, forg= 16.0% <<<
+>>> Test on task  2 : loss=0.000 | TAw acc= 76.6%, forg=  0.0%| TAg acc= 50.7%, forg= 15.4% <<<
+>>> Test on task  3 : loss=0.000 | TAw acc= 82.6%, forg=  0.0%| TAg acc= 60.7%, forg=  4.2% <<<
+>>> Test on task  4 : loss=0.000 | TAw acc= 84.1%, forg=  0.0%| TAg acc= 60.4%, forg=  7.3% <<<
+>>> Test on task  5 : loss=0.000 | TAw acc= 80.3%, forg=  0.0%| TAg acc= 57.2%, forg=  2.5% <<<
+>>> Test on task  6 : loss=0.000 | TAw acc= 85.2%, forg=  0.0%| TAg acc= 63.3%, forg=  0.6% <<<
+>>> Test on task  7 : loss=0.000 | TAw acc= 81.6%, forg=  0.0%| TAg acc= 63.5%, forg=  0.0% <<<
+Save at /home/it219111/experiments/FACILCUSTOM/results/simplecil_inat200_resnetv2_101_in21k
+No exemplars to save for task 7 (Approach: simplecil)
+************************************************************************************************************
+Task  8
+************************************************************************************************************
+
+[Task 8] Computing prototypes ...
+   -> Stored 20 prototypes. Total seen classes: 180
+------------------------------------------------------------------------------------------------------------
+>>> Test on task  0 : loss=0.000 | TAw acc= 81.1%, forg=  0.0%| TAg acc= 45.2%, forg= 35.8% <<<
+>>> Test on task  1 : loss=0.000 | TAw acc= 81.6%, forg=  0.0%| TAg acc= 58.5%, forg= 16.5% <<<
+>>> Test on task  2 : loss=0.000 | TAw acc= 76.6%, forg=  0.0%| TAg acc= 48.5%, forg= 17.6% <<<
+>>> Test on task  3 : loss=0.000 | TAw acc= 82.6%, forg=  0.0%| TAg acc= 59.9%, forg=  5.0% <<<
+>>> Test on task  4 : loss=0.000 | TAw acc= 84.1%, forg=  0.0%| TAg acc= 58.9%, forg=  8.8% <<<
+>>> Test on task  5 : loss=0.000 | TAw acc= 80.3%, forg=  0.0%| TAg acc= 56.2%, forg=  3.5% <<<
+>>> Test on task  6 : loss=0.000 | TAw acc= 85.2%, forg=  0.0%| TAg acc= 62.3%, forg=  1.6% <<<
+>>> Test on task  7 : loss=0.000 | TAw acc= 81.6%, forg=  0.0%| TAg acc= 63.1%, forg=  0.4% <<<
+>>> Test on task  8 : loss=0.000 | TAw acc= 77.2%, forg=  0.0%| TAg acc= 53.3%, forg=  0.0% <<<
+Save at /home/it219111/experiments/FACILCUSTOM/results/simplecil_inat200_resnetv2_101_in21k
+No exemplars to save for task 8 (Approach: simplecil)
+************************************************************************************************************
+Task  9
+************************************************************************************************************
+
+[Task 9] Computing prototypes ...
+   -> Stored 20 prototypes. Total seen classes: 200
+------------------------------------------------------------------------------------------------------------
+>>> Test on task  0 : loss=0.000 | TAw acc= 81.1%, forg=  0.0%| TAg acc= 45.0%, forg= 36.1% <<<
+>>> Test on task  1 : loss=0.000 | TAw acc= 81.6%, forg=  0.0%| TAg acc= 57.5%, forg= 17.5% <<<
+>>> Test on task  2 : loss=0.000 | TAw acc= 76.6%, forg=  0.0%| TAg acc= 47.4%, forg= 18.7% <<<
+>>> Test on task  3 : loss=0.000 | TAw acc= 82.6%, forg=  0.0%| TAg acc= 59.0%, forg=  5.9% <<<
+>>> Test on task  4 : loss=0.000 | TAw acc= 84.1%, forg=  0.0%| TAg acc= 58.4%, forg=  9.3% <<<
+>>> Test on task  5 : loss=0.000 | TAw acc= 80.3%, forg=  0.0%| TAg acc= 54.0%, forg=  5.8% <<<
+>>> Test on task  6 : loss=0.000 | TAw acc= 85.2%, forg=  0.0%| TAg acc= 60.8%, forg=  3.1% <<<
+>>> Test on task  7 : loss=0.000 | TAw acc= 81.6%, forg=  0.0%| TAg acc= 62.1%, forg=  1.4% <<<
+>>> Test on task  8 : loss=0.000 | TAw acc= 77.2%, forg=  0.0%| TAg acc= 52.2%, forg=  1.1% <<<
+>>> Test on task  9 : loss=0.000 | TAw acc= 79.8%, forg=  0.0%| TAg acc= 50.8%, forg=  0.0% <<<
+Save at /home/it219111/experiments/FACILCUSTOM/results/simplecil_inat200_resnetv2_101_in21k
+No exemplars to save for task 9 (Approach: simplecil)
+************************************************************************************************************
+TAw Acc
+	 81.1%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 81.1% 
+	 81.1%  81.6%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 81.3% 
+	 81.1%  81.6%  76.6%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 79.7% 
+	 81.1%  81.6%  76.6%  82.6%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 80.4% 
+	 81.1%  81.6%  76.6%  82.6%  84.1%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 81.2% 
+	 81.1%  81.6%  76.6%  82.6%  84.1%  80.3%   0.0%   0.0%   0.0%   0.0% 	Avg.: 81.0% 
+	 81.1%  81.6%  76.6%  82.6%  84.1%  80.3%  85.2%   0.0%   0.0%   0.0% 	Avg.: 81.6% 
+	 81.1%  81.6%  76.6%  82.6%  84.1%  80.3%  85.2%  81.6%   0.0%   0.0% 	Avg.: 81.6% 
+	 81.1%  81.6%  76.6%  82.6%  84.1%  80.3%  85.2%  81.6%  77.2%   0.0% 	Avg.: 81.1% 
+	 81.1%  81.6%  76.6%  82.6%  84.1%  80.3%  85.2%  81.6%  77.2%  79.8% 	Avg.: 81.0% 
+************************************************************************************************************
+TAg Acc
+	 81.1%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 81.1% 
+	 74.5%  75.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 74.8% 
+	 66.1%  69.1%  66.1%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 67.1% 
+	 61.0%  66.5%  63.7%  64.9%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 64.0% 
+	 54.5%  63.7%  61.5%  63.5%  67.7%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 62.2% 
+	 51.8%  61.8%  56.8%  62.3%  65.2%  59.8%   0.0%   0.0%   0.0%   0.0% 	Avg.: 59.6% 
+	 50.4%  60.0%  54.0%  61.2%  61.9%  58.2%  64.0%   0.0%   0.0%   0.0% 	Avg.: 58.5% 
+	 47.0%  59.0%  50.7%  60.7%  60.4%  57.2%  63.3%  63.5%   0.0%   0.0% 	Avg.: 57.7% 
+	 45.2%  58.5%  48.5%  59.9%  58.9%  56.2%  62.3%  63.1%  53.3%   0.0% 	Avg.: 56.2% 
+	 45.0%  57.5%  47.4%  59.0%  58.4%  54.0%  60.8%  62.1%  52.2%  50.8% 	Avg.: 54.7% 
+************************************************************************************************************
+TAw Forg
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+************************************************************************************************************
+TAg Forg
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 
+	  6.6%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  6.6% 
+	 15.0%   5.9%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 10.4% 
+	 20.1%   8.5%   2.5%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 10.3% 
+	 26.6%  11.4%   4.6%   1.4%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 11.0% 
+	 29.3%  13.2%   9.3%   2.5%   2.5%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 11.4% 
+	 30.6%  15.0%  12.2%   3.7%   5.8%   1.6%   0.0%   0.0%   0.0%   0.0% 	Avg.: 11.5% 
+	 34.1%  16.0%  15.4%   4.2%   7.3%   2.5%   0.6%   0.0%   0.0%   0.0% 	Avg.: 11.4% 
+	 35.8%  16.5%  17.6%   5.0%   8.8%   3.5%   1.6%   0.4%   0.0%   0.0% 	Avg.: 11.2% 
+	 36.1%  17.5%  18.7%   5.9%   9.3%   5.8%   3.1%   1.4%   1.1%   0.0% 	Avg.: 11.0% 
+************************************************************************************************************
+[Elapsed time = 0.2 h]
+Done!
