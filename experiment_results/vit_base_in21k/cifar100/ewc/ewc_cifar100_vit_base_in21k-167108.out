@@ -1,0 +1,180 @@
+START_TASK=9 STOP_TASK=10
+============================================================================================================
+Arguments =
+	all_outputs: False
+	approach: ewc
+	batch_size: 64
+	classes_first_task: None
+	clipping: 10000
+	crop: 224
+	dataset: cifar100
+	eval_on_train: False
+	experiment_path: None
+	fix_bn: False
+	freeze_backbone: False
+	gpu: 0
+	gpus: [0]
+	increment: 10
+	last_layer_analysis: True
+	log: ['disk']
+	lr: 0.01
+	lr_factor: None
+	lr_min: 0.0001
+	lr_patience: None
+	lr_scheduler: cosine
+	lr_warmup_epochs: 0
+	momentum: 0.0
+	multi_softmax: False
+	nepochs: 50
+	network: vit_base_patch16_224.orig_in21k
+	no_cudnn_deterministic: False
+	normalize: in21k
+	num_workers: 2
+	optimizer_name: sgd
+	pin_memory: False
+	pretrained: True
+	resize: 224
+	results_path: ./results
+	save_models: True
+	seed: 0
+	start_at_task: 9
+	start_epoch: 0
+	stop_at_task: 10
+	stop_epoch: 0
+	use_valid_only: False
+	warmup_lr_factor: 1.0
+	warmup_nepochs: 0
+	weight_decay: 0.0
+============================================================================================================
+Approach arguments =
+	alpha: -1
+	fi_num_samples: -1
+	fi_sampling_type: true
+	lamb: 5000
+============================================================================================================
+Exemplars arguments =
+============================================================================================================
+WARNING: ./results/vit_base_patch16_224.orig_in21k/cifar100/ewc/10 already exists!
+Loaded acc_taw from: ./results/vit_base_patch16_224.orig_in21k/cifar100/ewc/10/acc_taw-8.txt
+Loaded acc_tag from: ./results/vit_base_patch16_224.orig_in21k/cifar100/ewc/10/acc_tag-8.txt
+Loaded forg_taw from: ./results/vit_base_patch16_224.orig_in21k/cifar100/ewc/10/forg_taw-8.txt
+Loaded forg_tag from: ./results/vit_base_patch16_224.orig_in21k/cifar100/ewc/10/forg_tag-8.txt
+Fisher: 150 layers | older_params: 150 layers loaded
+************************************************************************************************************
+Task  9  [epochs 0-50]
+************************************************************************************************************
+[params] total:85,875,556  trainable:85,875,556  tensors:170  trainable_tensors:170
+| Epoch   1, time= 34.2s | Train: skip eval | Valid: time=  1.7s loss=2738574.032, TAw acc= 10.0% | * lr=1.0e-02
+| Epoch   2, time= 33.8s | Train: skip eval | Valid: time=  1.7s loss=252561.577, TAw acc= 15.4% | * lr=1.0e-02
+| Epoch   3, time= 33.9s | Train: skip eval | Valid: time=  1.7s loss=2717698.776, TAw acc= 10.0% | lr=9.9e-03
+| Epoch   4, time= 33.9s | Train: skip eval | Valid: time=  1.7s loss=242112.968, TAw acc= 18.0% | * lr=9.8e-03
+| Epoch   5, time= 33.8s | Train: skip eval | Valid: time=  1.7s loss=2669613.750, TAw acc= 10.0% | lr=9.8e-03
+| Epoch   6, time= 33.8s | Train: skip eval | Valid: time=  1.7s loss=224026.258, TAw acc= 17.8% | * lr=9.7e-03
+| Epoch   7, time= 33.8s | Train: skip eval | Valid: time=  1.7s loss=2595798.250, TAw acc=  8.6% | lr=9.5e-03
+| Epoch   8, time= 33.6s | Train: skip eval | Valid: time=  1.7s loss=199491.392, TAw acc= 18.8% | * lr=9.4e-03
+| Epoch   9, time= 33.8s | Train: skip eval | Valid: time=  1.7s loss=2498487.250, TAw acc= 10.0% | lr=9.2e-03
+| Epoch  10, time= 33.9s | Train: skip eval | Valid: time=  1.7s loss=170120.816, TAw acc= 16.6% | * lr=9.1e-03
+| Epoch  11, time= 33.8s | Train: skip eval | Valid: time=  1.7s loss=2380595.000, TAw acc= 10.0% | lr=8.9e-03
+| Epoch  12, time= 33.9s | Train: skip eval | Valid: time=  1.7s loss=137861.824, TAw acc= 25.2% | * lr=8.7e-03
+| Epoch  13, time= 33.9s | Train: skip eval | Valid: time=  1.7s loss=2245529.058, TAw acc= 10.0% | lr=8.4e-03
+| Epoch  14, time= 34.0s | Train: skip eval | Valid: time=  1.7s loss=104853.507, TAw acc= 18.6% | * lr=8.2e-03
+| Epoch  15, time= 34.1s | Train: skip eval | Valid: time=  1.7s loss=2097102.192, TAw acc= 15.2% | lr=8.0e-03
+| Epoch  16, time= 34.0s | Train: skip eval | Valid: time=  1.7s loss=73305.984, TAw acc= 19.2% | * lr=7.7e-03
+| Epoch  17, time= 33.8s | Train: skip eval | Valid: time=  1.7s loss=1939313.192, TAw acc=  4.4% | lr=7.4e-03
+| Epoch  18, time= 33.9s | Train: skip eval | Valid: time=  1.7s loss=116851.160, TAw acc= 46.2% | lr=7.2e-03
+| Epoch  19, time= 33.9s | Train: skip eval | Valid: time=  1.7s loss=1449306.170, TAw acc= 10.0% | lr=6.9e-03
+| Epoch  20, time= 34.0s | Train: skip eval | Valid: time=  1.7s loss=78508.495, TAw acc= 44.6% | lr=6.6e-03
+| Epoch  21, time= 33.9s | Train: skip eval | Valid: time=  1.7s loss=1301154.202, TAw acc= 10.0% | lr=6.3e-03
+| Epoch  22, time= 33.7s | Train: skip eval | Valid: time=  1.7s loss=95089.756, TAw acc= 47.6% | lr=6.0e-03
+| Epoch  23, time= 33.8s | Train: skip eval | Valid: time=  1.7s loss=965322.422, TAw acc= 12.0% | lr=5.7e-03
+| Epoch  24, time= 33.7s | Train: skip eval | Valid: time=  1.7s loss=58580.948, TAw acc= 51.4% | * lr=5.4e-03
+| Epoch  25, time= 33.7s | Train: skip eval | Valid: time=  1.7s loss=838407.149, TAw acc= 10.2% | lr=5.1e-03
+| Epoch  26, time= 33.7s | Train: skip eval | Valid: time=  1.7s loss=195002.929, TAw acc= 45.6% | lr=4.7e-03
+| Epoch  27, time= 33.9s | Train: skip eval | Valid: time=  1.7s loss=338555.275, TAw acc= 32.4% | lr=4.4e-03
+| Epoch  28, time= 33.8s | Train: skip eval | Valid: time=  1.7s loss=140377.411, TAw acc= 53.0% | lr=4.1e-03
+| Epoch  29, time= 33.9s | Train: skip eval | Valid: time=  1.7s loss=265793.019, TAw acc= 45.0% | lr=3.8e-03
+| Epoch  30, time= 33.9s | Train: skip eval | Valid: time=  1.7s loss=95588.000, TAw acc= 51.6% | lr=3.5e-03
+| Epoch  31, time= 33.8s | Train: skip eval | Valid: time=  1.7s loss=203457.847, TAw acc= 51.8% | lr=3.2e-03
+| Epoch  32, time= 33.8s | Train: skip eval | Valid: time=  1.7s loss=60495.841, TAw acc= 55.6% | lr=2.9e-03
+| Epoch  33, time= 33.7s | Train: skip eval | Valid: time=  1.7s loss=150285.543, TAw acc= 36.2% | lr=2.7e-03
+| Epoch  34, time= 34.1s | Train: skip eval | Valid: time=  2.1s loss=87796.853, TAw acc= 43.4% | lr=2.4e-03
+| Epoch  35, time= 34.7s | Train: skip eval | Valid: time=  1.7s loss=59523.989, TAw acc= 43.6% | lr=2.1e-03
+| Epoch  36, time= 33.7s | Train: skip eval | Valid: time=  1.7s loss=28875.162, TAw acc= 49.8% | * lr=1.9e-03
+| Epoch  37, time= 33.9s | Train: skip eval | Valid: time=  1.7s loss=1.703, TAw acc= 59.6% | * lr=1.7e-03
+| Epoch  38, time= 33.8s | Train: skip eval | Valid: time=  1.7s loss=1.525, TAw acc= 65.2% | * lr=1.4e-03
+| Epoch  39, time= 33.8s | Train: skip eval | Valid: time=  1.7s loss=1.412, TAw acc= 68.2% | * lr=1.2e-03
+| Epoch  40, time= 33.8s | Train: skip eval | Valid: time=  1.8s loss=1.329, TAw acc= 71.0% | * lr=1.0e-03
+| Epoch  41, time= 35.5s | Train: skip eval | Valid: time=  1.7s loss=1.266, TAw acc= 71.4% | * lr=8.7e-04
+| Epoch  42, time= 33.8s | Train: skip eval | Valid: time=  1.7s loss=1.220, TAw acc= 72.2% | * lr=7.1e-04
+| Epoch  43, time= 33.9s | Train: skip eval | Valid: time=  1.7s loss=1.181, TAw acc= 73.6% | * lr=5.7e-04
+| Epoch  44, time= 34.0s | Train: skip eval | Valid: time=  1.7s loss=1.151, TAw acc= 74.4% | * lr=4.5e-04
+| Epoch  45, time= 34.2s | Train: skip eval | Valid: time=  1.7s loss=1.129, TAw acc= 75.8% | * lr=3.4e-04
+| Epoch  46, time= 34.1s | Train: skip eval | Valid: time=  1.8s loss=1.114, TAw acc= 74.8% | * lr=2.6e-04
+| Epoch  47, time= 33.9s | Train: skip eval | Valid: time=  1.7s loss=1.103, TAw acc= 75.6% | * lr=1.9e-04
+| Epoch  48, time= 34.0s | Train: skip eval | Valid: time=  1.7s loss=1.095, TAw acc= 76.0% | * lr=1.4e-04
+| Epoch  49, time= 33.9s | Train: skip eval | Valid: time=  1.7s loss=1.088, TAw acc= 76.0% | * lr=1.1e-04
+| Epoch  50, time= 33.8s | Train: skip eval | Valid: time=  1.7s loss=1.083, TAw acc= 76.2% | * lr=1.0e-04
+------------------------------------------------------------------------------------------------------------
+>>> Test on task  0 : loss=1.113 | TAw acc= 61.7%, forg= 36.9% | TAg acc= 47.4%, forg= 51.2% <<<
+>>> Test on task  1 : loss=0.696 | TAw acc= 76.7%, forg= 21.8% | TAg acc= 62.1%, forg= 27.3% <<<
+>>> Test on task  2 : loss=0.775 | TAw acc= 74.8%, forg= 23.7% | TAg acc= 37.4%, forg= 31.0% <<<
+>>> Test on task  3 : loss=1.149 | TAw acc= 63.1%, forg= 32.9% | TAg acc= 10.6%, forg= 51.0% <<<
+>>> Test on task  4 : loss=1.332 | TAw acc= 59.8%, forg= 37.4% | TAg acc=  3.1%, forg= 31.7% <<<
+>>> Test on task  5 : loss=1.035 | TAw acc= 65.4%, forg= 23.1% | TAg acc=  3.6%, forg= 19.1% <<<
+>>> Test on task  6 : loss=1.381 | TAw acc= 57.6%, forg= 36.9% | TAg acc=  1.1%, forg= 19.9% <<<
+>>> Test on task  7 : loss=1.137 | TAw acc= 68.2%, forg= 25.8% | TAg acc=  8.2%, forg= 29.3% <<<
+>>> Test on task  8 : loss=1.023 | TAw acc= 69.2%, forg= 26.2% | TAg acc=  8.2%, forg= 25.5% <<<
+>>> Test on task  9 : loss=0.951 | TAw acc= 75.7%, forg=  0.0% | TAg acc=  3.6%, forg=  0.0% <<<
+Save at ./results/./results/vit_base_patch16_224.orig_in21k/cifar100/ewc/10
+Plotting last layer analysis...
+************************************************************************************************************
+TAw Acc
+	 98.6%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 98.6% 
+	 95.4%  98.5%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 96.9% 
+	 94.6%  97.2%  98.4%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 96.7% 
+	 96.2%  96.0%  98.5%  96.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 96.7% 
+	 96.5%  97.3%  97.7%  95.3%  97.2%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 96.8% 
+	 95.8%  95.0%  97.7%  93.6%  95.9%  88.5%   0.0%   0.0%   0.0%   0.0% 	Avg.: 94.4% 
+	 96.4%  94.2%  97.7%  93.1%  93.6%  87.5%  94.5%   0.0%   0.0%   0.0% 	Avg.: 93.9% 
+	 85.6%  92.1%  92.4%  83.8%  90.1%  83.7%  83.9%  94.0%   0.0%   0.0% 	Avg.: 88.2% 
+	 89.6%  93.7%  93.4%  87.3%  88.4%  84.2%  86.2%  91.0%  95.4%   0.0% 	Avg.: 89.9% 
+	 61.7%  76.7%  74.8%  63.1%  59.8%  65.4%  57.6%  68.2%  69.2%  75.7% 	Avg.: 67.2% 
+************************************************************************************************************
+TAg Acc
+	 98.6%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 98.6% 
+	 92.8%  88.4%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 90.6% 
+	 90.1%  87.4%  65.2%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 80.9% 
+	 91.2%  87.5%  67.3%  61.6%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 76.9% 
+	 92.4%  89.4%  66.9%  55.6%  34.8%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 67.8% 
+	 89.1%  85.4%  65.7%  53.0%  29.1%  22.7%   0.0%   0.0%   0.0%   0.0% 	Avg.: 57.5% 
+	 87.7%  85.8%  68.4%  47.1%  24.9%  17.1%  21.0%   0.0%   0.0%   0.0% 	Avg.: 50.3% 
+	 75.3%  83.2%  58.3%  34.4%  18.7%  14.4%  12.5%  37.5%   0.0%   0.0% 	Avg.: 41.8% 
+	 82.3%  82.9%  59.4%  36.7%  13.3%  14.6%   9.9%  27.5%  33.7%   0.0% 	Avg.: 40.0% 
+	 47.4%  62.1%  37.4%  10.6%   3.1%   3.6%   1.1%   8.2%   8.2%   3.6% 	Avg.: 18.5% 
+************************************************************************************************************
+TAw Forg
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 
+	  3.2%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  3.2% 
+	  4.0%   1.3%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  2.6% 
+	  2.4%   2.5%  -0.1%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  1.6% 
+	  2.1%   1.2%   0.8%   0.7%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  1.2% 
+	  2.8%   3.5%   0.8%   2.4%   1.3%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  2.2% 
+	  2.2%   4.3%   0.8%   2.9%   3.6%   1.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  2.5% 
+	 13.0%   6.4%   6.1%  12.2%   7.1%   4.8%  10.6%   0.0%   0.0%   0.0% 	Avg.:  8.6% 
+	  9.0%   4.8%   5.1%   8.7%   8.8%   4.3%   8.3%   3.0%   0.0%   0.0% 	Avg.:  6.5% 
+	 36.9%  21.8%  23.7%  32.9%  37.4%  23.1%  36.9%  25.8%  26.2%   0.0% 	Avg.: 29.4% 
+************************************************************************************************************
+TAg Forg
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 
+	  5.8%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  5.8% 
+	  8.5%   1.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  4.8% 
+	  7.4%   0.9%  -2.1%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  2.1% 
+	  6.2%  -1.0%   0.4%   6.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  2.9% 
+	  9.5%   4.0%   1.6%   8.6%   5.7%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  5.9% 
+	 10.9%   3.6%  -1.1%  14.5%   9.9%   5.6%   0.0%   0.0%   0.0%   0.0% 	Avg.:  7.2% 
+	 23.3%   6.2%  10.1%  27.2%  16.1%   8.3%   8.5%   0.0%   0.0%   0.0% 	Avg.: 14.2% 
+	 16.3%   6.5%   9.0%  24.9%  21.5%   8.1%  11.1%  10.0%   0.0%   0.0% 	Avg.: 13.4% 
+	 51.2%  27.3%  31.0%  51.0%  31.7%  19.1%  19.9%  29.3%  25.5%   0.0% 	Avg.: 31.8% 
+************************************************************************************************************
+[Elapsed time = 0.5 h]
+Done!
