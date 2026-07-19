@@ -1,0 +1,85 @@
+START_TASK=9 STOP_TASK=10 START_EPOCH=0 STOP_EPOCH=17
+============================================================================================================
+Arguments =
+	all_outputs: False
+	approach: joint
+	batch_size: 64
+	classes_first_task: None
+	clipping: 10000
+	crop: 224
+	data_path: ../data/food101
+	dataset: food101
+	eval_on_train: False
+	experiment_path: None
+	fix_bn: False
+	freeze_backbone: False
+	gpu: 0
+	gpus: [0, 1]
+	increment: 10
+	last_layer_analysis: False
+	log: ['disk']
+	lr: 0.01
+	lr_factor: None
+	lr_min: 0.0001
+	lr_patience: None
+	lr_scheduler: cosine
+	lr_warmup_epochs: 0
+	momentum: 0.0
+	multi_softmax: False
+	nepochs: 70
+	network: vit_base_patch16_224.orig_in21k
+	no_cudnn_deterministic: False
+	normalize: in21k
+	num_workers: 2
+	optimizer_name: sgd
+	pin_memory: False
+	pretrained: True
+	resize: 224
+	results_path: ./results
+	save_models: True
+	seed: 0
+	start_at_task: 9
+	start_epoch: 0
+	stop_at_task: 10
+	stop_epoch: 17
+	use_valid_only: False
+	warmup_lr_factor: 1.0
+	warmup_nepochs: 0
+	weight_decay: 0.0
+============================================================================================================
+Approach arguments =
+============================================================================================================
+Exemplars arguments =
+============================================================================================================
+WARNING: ./results/vit_base_patch16_224.orig_in21k/food101/joint/10 already exists!
+Multi-GPU mode: DataParallel on 2 GPUs (CUDA_VISIBLE_DEVICES=2 available)
+Loaded acc_taw from: ./results/vit_base_patch16_224.orig_in21k/food101/joint/10/acc_taw-8.txt
+Loaded acc_tag from: ./results/vit_base_patch16_224.orig_in21k/food101/joint/10/acc_tag-8.txt
+Loaded forg_taw from: ./results/vit_base_patch16_224.orig_in21k/food101/joint/10/forg_taw-8.txt
+Loaded forg_tag from: ./results/vit_base_patch16_224.orig_in21k/food101/joint/10/forg_tag-8.txt
+[joint] Loaded accumulated datasets up to task 8 from ./results/vit_base_patch16_224.orig_in21k/food101/joint/10/joint_progress
+************************************************************************************************************
+Task  9  [epochs 0-17]
+************************************************************************************************************
+[params] total:85,875,556  trainable:85,875,556  tensors:170  trainable_tensors:170
+| Epoch   1, time=326.9s | Train: skip eval | Valid: time= 27.2s loss=0.643, TAw acc= 95.4% | * lr=1.0e-02
+| Epoch   2, time=327.3s | Train: skip eval | Valid: time= 25.8s loss=0.605, TAw acc= 95.7% | * lr=1.0e-02
+| Epoch   3, time=327.7s | Train: skip eval | Valid: time= 27.8s loss=0.614, TAw acc= 95.7% | lr=1.0e-02
+| Epoch   4, time=326.9s | Train: skip eval | Valid: time= 27.1s loss=0.612, TAw acc= 95.8% | lr=9.9e-03
+| Epoch   5, time=327.0s | Train: skip eval | Valid: time= 26.8s loss=0.603, TAw acc= 96.0% | * lr=9.9e-03
+| Epoch   6, time=326.5s | Train: skip eval | Valid: time= 27.3s loss=0.611, TAw acc= 95.7% | lr=9.8e-03
+| Epoch   7, time=327.6s | Train: skip eval | Valid: time= 27.5s loss=0.592, TAw acc= 96.0% | * lr=9.8e-03
+| Epoch   8, time=327.4s | Train: skip eval | Valid: time= 26.6s loss=0.611, TAw acc= 95.9% | lr=9.7e-03
+| Epoch   9, time=327.9s | Train: skip eval | Valid: time= 27.3s loss=0.616, TAw acc= 95.7% | lr=9.6e-03
+| Epoch  10, time=327.0s | Train: skip eval | Valid: time= 27.0s loss=0.603, TAw acc= 96.0% | lr=9.5e-03
+| Epoch  11, time=327.1s | Train: skip eval | Valid: time= 28.6s loss=0.603, TAw acc= 96.0% | lr=9.4e-03
+| Epoch  12, time=327.5s | Train: skip eval | Valid: time= 26.8s loss=0.621, TAw acc= 96.0% | lr=9.3e-03
+| Epoch  13, time=327.0s | Train: skip eval | Valid: time= 26.4s loss=0.615, TAw acc= 96.1% | lr=9.2e-03
+| Epoch  14, time=326.7s | Train: skip eval | Valid: time= 26.4s loss=0.602, TAw acc= 96.2% | lr=9.1e-03
+| Epoch  15, time=328.1s | Train: skip eval | Valid: time= 27.6s loss=0.635, TAw acc= 95.9% | lr=8.9e-03
+| Epoch  16, time=327.4s | Train: skip eval | Valid: time= 26.6s loss=0.625, TAw acc= 95.9% | lr=8.8e-03
+| Epoch  17, time=328.0s | Train: skip eval | Valid: time= 26.6s loss=0.644, TAw acc= 95.8% | lr=8.6e-03
+------------------------------------------------------------------------------------------------------------
+[joint] Saved accumulated datasets up to task 9 → ./results/vit_base_patch16_224.orig_in21k/food101/joint/10/joint_progress
+[Elapsed time = 1.7 h]
+Done!

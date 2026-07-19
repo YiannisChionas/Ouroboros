@@ -1,0 +1,75 @@
+START_TASK=9 STOP_TASK=10 START_EPOCH=0 STOP_EPOCH=12
+============================================================================================================
+Arguments =
+	all_outputs: False
+	approach: joint_v2
+	batch_size: 64
+	classes_first_task: None
+	clipping: 10000
+	crop: 224
+	dataset: cifar100
+	eval_on_train: False
+	experiment_path: None
+	fix_bn: False
+	freeze_backbone: False
+	gpu: 0
+	increment: 10
+	log: ['disk']
+	lr: 0.01
+	lr_factor: None
+	lr_min: 0.0001
+	lr_patience: None
+	lr_scheduler: cosine
+	lr_warmup_epochs: 0
+	momentum: 0.0
+	multi_softmax: False
+	nepochs: 50
+	network: vit_small_patch16_224.augreg_in1k
+	no_cudnn_deterministic: False
+	normalize: in1k
+	num_workers: 2
+	optimizer_name: sgd
+	pin_memory: False
+	pretrained: True
+	resize: 224
+	results_path: ../results
+	save_models: True
+	seed: 0
+	start_at_task: 9
+	start_epoch: 0
+	stop_at_task: 10
+	stop_epoch: 12
+	use_valid_only: False
+	warmup_lr_factor: 1.0
+	warmup_nepochs: 0
+	weight_decay: 0.0
+============================================================================================================
+Approach arguments =
+============================================================================================================
+Exemplars dataset arguments =
+============================================================================================================
+WARNING: ../results/vit_small_patch16_224.augreg_in1k/cifar100/joint_v2/10 already exists!
+Loaded acc_taw from: ../results/vit_small_patch16_224.augreg_in1k/cifar100/joint_v2/10/acc_taw-8.txt
+Loaded acc_tag from: ../results/vit_small_patch16_224.augreg_in1k/cifar100/joint_v2/10/acc_tag-8.txt
+Loaded forg_taw from: ../results/vit_small_patch16_224.augreg_in1k/cifar100/joint_v2/10/forg_taw-8.txt
+Loaded forg_tag from: ../results/vit_small_patch16_224.augreg_in1k/cifar100/joint_v2/10/forg_tag-8.txt
+[joint] Loaded accumulated datasets up to task 8 from ../results/vit_small_patch16_224.augreg_in1k/cifar100/joint_v2/10/joint_progress
+************************************************************************************************************
+Task  9  [epochs 0-12]
+************************************************************************************************************
+| Epoch   1, time=108.9s | Train: skip eval | Valid: time=  6.2s loss=1.134, TAw acc= 91.8% | * lr=1.0e-02
+| Epoch   2, time=109.9s | Train: skip eval | Valid: time=  6.7s loss=0.690, TAw acc= 95.8% | * lr=1.0e-02
+| Epoch   3, time=110.4s | Train: skip eval | Valid: time=  6.9s loss=0.581, TAw acc= 96.7% | * lr=9.9e-03
+| Epoch   4, time=110.8s | Train: skip eval | Valid: time=  6.2s loss=0.547, TAw acc= 96.9% | * lr=9.8e-03
+| Epoch   5, time=111.4s | Train: skip eval | Valid: time=  6.2s loss=0.609, TAw acc= 96.5% | lr=9.8e-03
+| Epoch   6, time=110.8s | Train: skip eval | Valid: time=  6.7s loss=0.656, TAw acc= 95.7% | lr=9.7e-03
+| Epoch   7, time=110.6s | Train: skip eval | Valid: time=  6.7s loss=0.691, TAw acc= 95.8% | lr=9.5e-03
+| Epoch   8, time=110.3s | Train: skip eval | Valid: time=  6.4s loss=0.768, TAw acc= 95.2% | lr=9.4e-03
+| Epoch   9, time=110.8s | Train: skip eval | Valid: time=  6.4s loss=0.568, TAw acc= 96.6% | lr=9.2e-03
+| Epoch  10, time=110.3s | Train: skip eval | Valid: time=  6.4s loss=0.579, TAw acc= 97.0% | lr=9.1e-03
+| Epoch  11, time=110.7s | Train: skip eval | Valid: time=  6.7s loss=0.608, TAw acc= 96.5% | lr=8.9e-03
+| Epoch  12, time=110.6s | Train: skip eval | Valid: time=  6.6s loss=0.590, TAw acc= 96.7% | lr=8.7e-03
+------------------------------------------------------------------------------------------------------------
+[joint] Saved accumulated datasets up to task 9 → ../results/vit_small_patch16_224.augreg_in1k/cifar100/joint_v2/10/joint_progress
+[Elapsed time = 0.4 h]
+Done!
