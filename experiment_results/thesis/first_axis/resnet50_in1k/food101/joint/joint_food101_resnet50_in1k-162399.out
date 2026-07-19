@@ -1,0 +1,190 @@
+START_TASK=2 STOP_TASK=3 START_EPOCH=0 STOP_EPOCH=70
+============================================================================================================
+Arguments =
+	all_outputs: False
+	approach: joint
+	batch_size: 64
+	classes_first_task: None
+	clipping: 10000
+	crop: 224
+	data_path: ../data/food101
+	dataset: food101
+	eval_on_train: False
+	experiment_path: None
+	fix_bn: False
+	freeze_backbone: False
+	gpu: 0
+	gpus: [0]
+	increment: 10
+	last_layer_analysis: False
+	log: ['disk']
+	lr: 0.01
+	lr_factor: None
+	lr_min: 0.0001
+	lr_patience: None
+	lr_scheduler: cosine
+	lr_warmup_epochs: 0
+	momentum: 0.0
+	multi_softmax: False
+	nepochs: 70
+	network: resnet50.a1_in1k
+	no_cudnn_deterministic: False
+	normalize: in1k
+	num_workers: 2
+	optimizer_name: sgd
+	pin_memory: False
+	pretrained: True
+	resize: 224
+	results_path: ./results
+	save_models: True
+	seed: 0
+	start_at_task: 2
+	start_epoch: 0
+	stop_at_task: 3
+	stop_epoch: 70
+	use_valid_only: False
+	warmup_lr_factor: 1.0
+	warmup_nepochs: 0
+	weight_decay: 0.0
+============================================================================================================
+Approach arguments =
+============================================================================================================
+Exemplars arguments =
+============================================================================================================
+WARNING: ./results/resnet50.a1_in1k/food101/joint/10 already exists!
+Loaded acc_taw from: ./results/resnet50.a1_in1k/food101/joint/10/acc_taw-1.txt
+Loaded acc_tag from: ./results/resnet50.a1_in1k/food101/joint/10/acc_tag-1.txt
+Loaded forg_taw from: ./results/resnet50.a1_in1k/food101/joint/10/forg_taw-1.txt
+Loaded forg_tag from: ./results/resnet50.a1_in1k/food101/joint/10/forg_tag-1.txt
+[joint] Loaded accumulated datasets up to task 1 from ./results/resnet50.a1_in1k/food101/joint/10/joint_progress
+************************************************************************************************************
+Task  2  [epochs 0-70]
+************************************************************************************************************
+[params] total:23,569,502  trainable:23,569,502  tensors:165  trainable_tensors:165
+| Epoch   1, time= 72.4s | Train: skip eval | Valid: time=  6.5s loss=1.482, TAw acc= 79.1% | * lr=1.0e-02
+| Epoch   2, time= 74.8s | Train: skip eval | Valid: time=  6.5s loss=1.322, TAw acc= 80.7% | * lr=1.0e-02
+| Epoch   3, time= 68.4s | Train: skip eval | Valid: time=  6.7s loss=1.209, TAw acc= 81.6% | * lr=1.0e-02
+| Epoch   4, time= 71.2s | Train: skip eval | Valid: time=  6.5s loss=1.093, TAw acc= 82.8% | * lr=9.9e-03
+| Epoch   5, time= 66.0s | Train: skip eval | Valid: time=  6.4s loss=1.105, TAw acc= 81.7% | lr=9.9e-03
+| Epoch   6, time= 69.3s | Train: skip eval | Valid: time=  6.6s loss=1.006, TAw acc= 84.0% | * lr=9.8e-03
+| Epoch   7, time= 69.4s | Train: skip eval | Valid: time=  6.7s loss=0.993, TAw acc= 84.8% | * lr=9.8e-03
+| Epoch   8, time= 71.6s | Train: skip eval | Valid: time=  7.7s loss=0.971, TAw acc= 84.0% | * lr=9.7e-03
+| Epoch   9, time= 70.1s | Train: skip eval | Valid: time=  6.8s loss=0.948, TAw acc= 84.4% | * lr=9.6e-03
+| Epoch  10, time= 71.1s | Train: skip eval | Valid: time=  6.8s loss=0.932, TAw acc= 84.4% | * lr=9.5e-03
+| Epoch  11, time= 69.4s | Train: skip eval | Valid: time=  6.8s loss=0.964, TAw acc= 84.1% | lr=9.4e-03
+| Epoch  12, time= 73.2s | Train: skip eval | Valid: time=  6.9s loss=0.892, TAw acc= 85.8% | * lr=9.3e-03
+| Epoch  13, time= 68.6s | Train: skip eval | Valid: time=  6.4s loss=0.894, TAw acc= 84.8% | lr=9.2e-03
+| Epoch  14, time= 71.6s | Train: skip eval | Valid: time=  7.2s loss=0.859, TAw acc= 85.7% | * lr=9.1e-03
+| Epoch  15, time= 70.4s | Train: skip eval | Valid: time=  7.6s loss=0.839, TAw acc= 85.9% | * lr=8.9e-03
+| Epoch  16, time= 68.3s | Train: skip eval | Valid: time=  7.7s loss=0.831, TAw acc= 86.4% | * lr=8.8e-03
+| Epoch  17, time= 66.3s | Train: skip eval | Valid: time=  6.7s loss=0.818, TAw acc= 86.4% | * lr=8.6e-03
+| Epoch  18, time= 71.0s | Train: skip eval | Valid: time=  6.8s loss=0.806, TAw acc= 86.3% | * lr=8.5e-03
+| Epoch  19, time= 66.6s | Train: skip eval | Valid: time=  6.6s loss=0.808, TAw acc= 86.7% | lr=8.3e-03
+| Epoch  20, time= 67.9s | Train: skip eval | Valid: time=  6.6s loss=0.795, TAw acc= 87.0% | * lr=8.1e-03
+| Epoch  21, time= 68.2s | Train: skip eval | Valid: time=  7.0s loss=0.790, TAw acc= 86.7% | * lr=8.0e-03
+| Epoch  22, time= 77.4s | Train: skip eval | Valid: time=  6.4s loss=0.796, TAw acc= 86.6% | lr=7.8e-03
+| Epoch  23, time= 68.4s | Train: skip eval | Valid: time=  6.5s loss=0.772, TAw acc= 87.4% | * lr=7.6e-03
+| Epoch  24, time= 76.5s | Train: skip eval | Valid: time=  7.8s loss=0.766, TAw acc= 87.2% | * lr=7.4e-03
+| Epoch  25, time= 72.1s | Train: skip eval | Valid: time=  7.1s loss=0.771, TAw acc= 86.7% | lr=7.2e-03
+| Epoch  26, time= 68.1s | Train: skip eval | Valid: time=  7.2s loss=0.768, TAw acc= 86.4% | lr=7.0e-03
+| Epoch  27, time= 74.8s | Train: skip eval | Valid: time=  7.5s loss=0.769, TAw acc= 86.8% | lr=6.8e-03
+| Epoch  28, time= 69.6s | Train: skip eval | Valid: time=  6.5s loss=0.745, TAw acc= 87.8% | * lr=6.6e-03
+| Epoch  29, time= 69.6s | Train: skip eval | Valid: time=  6.6s loss=0.728, TAw acc= 87.6% | * lr=6.4e-03
+| Epoch  30, time= 72.2s | Train: skip eval | Valid: time=  6.7s loss=0.739, TAw acc= 87.3% | lr=6.2e-03
+| Epoch  31, time= 69.1s | Train: skip eval | Valid: time=  7.3s loss=0.740, TAw acc= 87.6% | lr=5.9e-03
+| Epoch  32, time= 70.3s | Train: skip eval | Valid: time=  6.8s loss=0.716, TAw acc= 88.2% | * lr=5.7e-03
+| Epoch  33, time= 75.5s | Train: skip eval | Valid: time=  7.7s loss=0.723, TAw acc= 87.4% | lr=5.5e-03
+| Epoch  34, time= 69.2s | Train: skip eval | Valid: time=  6.6s loss=0.707, TAw acc= 88.4% | * lr=5.3e-03
+| Epoch  35, time= 74.5s | Train: skip eval | Valid: time=  6.5s loss=0.706, TAw acc= 87.7% | * lr=5.1e-03
+| Epoch  36, time= 69.5s | Train: skip eval | Valid: time=  6.8s loss=0.716, TAw acc= 87.9% | lr=4.8e-03
+| Epoch  37, time= 67.3s | Train: skip eval | Valid: time=  6.5s loss=0.708, TAw acc= 88.2% | lr=4.6e-03
+| Epoch  38, time= 68.9s | Train: skip eval | Valid: time=  6.8s loss=0.703, TAw acc= 88.4% | * lr=4.4e-03
+| Epoch  39, time= 71.4s | Train: skip eval | Valid: time=  8.3s loss=0.699, TAw acc= 88.2% | * lr=4.2e-03
+| Epoch  40, time= 74.0s | Train: skip eval | Valid: time=  6.7s loss=0.714, TAw acc= 87.9% | lr=3.9e-03
+| Epoch  41, time= 70.1s | Train: skip eval | Valid: time=  7.1s loss=0.695, TAw acc= 88.6% | * lr=3.7e-03
+| Epoch  42, time= 71.1s | Train: skip eval | Valid: time=  7.3s loss=0.693, TAw acc= 88.3% | * lr=3.5e-03
+| Epoch  43, time= 71.2s | Train: skip eval | Valid: time=  7.6s loss=0.688, TAw acc= 88.4% | * lr=3.3e-03
+| Epoch  44, time= 67.6s | Train: skip eval | Valid: time=  6.7s loss=0.686, TAw acc= 88.5% | * lr=3.1e-03
+| Epoch  45, time= 68.2s | Train: skip eval | Valid: time=  6.6s loss=0.683, TAw acc= 88.6% | * lr=2.9e-03
+| Epoch  46, time= 70.7s | Train: skip eval | Valid: time=  6.6s loss=0.681, TAw acc= 88.6% | * lr=2.7e-03
+| Epoch  47, time= 76.8s | Train: skip eval | Valid: time=  6.8s loss=0.685, TAw acc= 87.9% | lr=2.5e-03
+| Epoch  48, time= 70.7s | Train: skip eval | Valid: time=  7.2s loss=0.672, TAw acc= 88.2% | * lr=2.3e-03
+| Epoch  49, time= 69.1s | Train: skip eval | Valid: time=  6.7s loss=0.683, TAw acc= 88.3% | lr=2.1e-03
+| Epoch  50, time= 72.8s | Train: skip eval | Valid: time=  6.7s loss=0.673, TAw acc= 88.1% | lr=2.0e-03
+| Epoch  51, time= 69.4s | Train: skip eval | Valid: time=  6.9s loss=0.676, TAw acc= 88.6% | lr=1.8e-03
+| Epoch  52, time= 67.3s | Train: skip eval | Valid: time=  6.7s loss=0.676, TAw acc= 88.5% | lr=1.6e-03
+| Epoch  53, time= 67.6s | Train: skip eval | Valid: time=  6.5s loss=0.675, TAw acc= 88.3% | lr=1.5e-03
+| Epoch  54, time= 69.1s | Train: skip eval | Valid: time=  7.1s loss=0.678, TAw acc= 88.4% | lr=1.3e-03
+| Epoch  55, time= 66.6s | Train: skip eval | Valid: time=  6.5s loss=0.667, TAw acc= 88.6% | * lr=1.2e-03
+| Epoch  56, time= 72.5s | Train: skip eval | Valid: time=  6.5s loss=0.661, TAw acc= 88.6% | * lr=1.0e-03
+| Epoch  57, time= 70.2s | Train: skip eval | Valid: time=  7.4s loss=0.667, TAw acc= 88.8% | lr=9.2e-04
+| Epoch  58, time= 73.4s | Train: skip eval | Valid: time=  6.6s loss=0.668, TAw acc= 88.6% | lr=8.0e-04
+| Epoch  59, time= 79.4s | Train: skip eval | Valid: time=  7.4s loss=0.667, TAw acc= 88.9% | lr=6.9e-04
+| Epoch  60, time= 71.0s | Train: skip eval | Valid: time=  6.9s loss=0.670, TAw acc= 88.7% | lr=5.9e-04
+| Epoch  61, time= 68.0s | Train: skip eval | Valid: time=  7.0s loss=0.668, TAw acc= 88.7% | lr=5.0e-04
+| Epoch  62, time= 69.4s | Train: skip eval | Valid: time=  7.0s loss=0.684, TAw acc= 88.3% | lr=4.2e-04
+| Epoch  63, time= 71.2s | Train: skip eval | Valid: time=  7.2s loss=0.672, TAw acc= 88.8% | lr=3.4e-04
+| Epoch  64, time= 74.0s | Train: skip eval | Valid: time=  6.9s loss=0.667, TAw acc= 88.8% | lr=2.8e-04
+| Epoch  65, time= 69.5s | Train: skip eval | Valid: time=  6.7s loss=0.666, TAw acc= 89.0% | lr=2.2e-04
+| Epoch  66, time= 70.2s | Train: skip eval | Valid: time=  6.7s loss=0.676, TAw acc= 88.7% | lr=1.8e-04
+| Epoch  67, time= 70.2s | Train: skip eval | Valid: time=  7.0s loss=0.665, TAw acc= 88.9% | lr=1.4e-04
+| Epoch  68, time= 73.1s | Train: skip eval | Valid: time=  6.7s loss=0.662, TAw acc= 88.6% | lr=1.2e-04
+| Epoch  69, time= 75.5s | Train: skip eval | Valid: time=  6.9s loss=0.660, TAw acc= 88.8% | * lr=1.0e-04
+| Epoch  70, time= 68.5s | Train: skip eval | Valid: time=  7.5s loss=0.663, TAw acc= 88.6% | lr=1.0e-04
+------------------------------------------------------------------------------------------------------------
+>>> Test on task  0 : loss=0.488 | TAw acc= 92.7%, forg= -1.8% | TAg acc= 85.9%, forg=  0.2% <<<
+>>> Test on task  1 : loss=0.471 | TAw acc= 94.4%, forg= -2.1% | TAg acc= 85.6%, forg=  0.6% <<<
+>>> Test on task  2 : loss=0.565 | TAw acc= 89.8%, forg=  0.0% | TAg acc= 83.4%, forg=  0.0% <<<
+Save at ./results/./results/resnet50.a1_in1k/food101/joint/10
+[joint] Saved accumulated datasets up to task 2 → ./results/resnet50.a1_in1k/food101/joint/10/joint_progress
+************************************************************************************************************
+TAw Acc
+	 86.1%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 86.1% 
+	 91.0%  92.3%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 91.6% 
+	 92.7%  94.4%  89.8%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 92.3% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+************************************************************************************************************
+TAg Acc
+	 86.1%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 86.1% 
+	 84.8%  86.2%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 85.5% 
+	 85.9%  85.6%  83.4%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: 85.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+************************************************************************************************************
+TAw Forg
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 
+	 -4.8%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: -4.8% 
+	 -1.8%  -2.1%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.: -1.9% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+************************************************************************************************************
+TAg Forg
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 
+	  1.4%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  1.4% 
+	  0.2%   0.6%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.4% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+	  0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0%   0.0% 	Avg.:  0.0% 
+************************************************************************************************************
+[Elapsed time = 1.5 h]
+Done!
