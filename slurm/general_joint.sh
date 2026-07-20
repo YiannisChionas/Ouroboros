@@ -1,5 +1,5 @@
 #!/bin/bash
-# Usage: bash general_joint.sh <job_script> <num_tasks> <nepochs> [SPLIT1] [SPLIT2]
+# Usage: bash general_joint.sh <job_script> <num_tasks> <nepochs> [SPLIT1] [SPLIT2] [INITIAL_DEP] [START_FROM]
 #
 # Submits joint training jobs with epoch-based splitting per task.
 # Split scheme (based on dataset size growth):
@@ -9,11 +9,13 @@
 #
 # SPLIT1 and SPLIT2 default to 5 and 8 (for 10-task datasets).
 # For inat200 (20 tasks) use SPLIT1=10 SPLIT2=15.
+# START_FROM: first task to submit (default 0) — use to resume after partial completion.
 #
 # Example:
 #   bash general_joint.sh vit_small_in1k/cifar100/joint.sh 10 50
 #   bash general_joint.sh vit_small_in1k/food101/joint.sh  10 70
 #   bash general_joint.sh resnet50_in1k/inat200/joint.sh   20 90 10 15
+#   bash general_joint.sh resnetv2_101_in21k/food101/joint.sh 10 70 5 8 "" 3  # resume from task 3
 
 set -euo pipefail
 
@@ -24,19 +26,20 @@ NEPOCHS="$3"
 SPLIT1="${4:-5}"
 SPLIT2="${5:-8}"
 INITIAL_DEP="${6:-}"
+START_FROM="${7:-0}"
 
 if [ ! -f "$JOB_SCRIPT" ]; then
     echo "ERROR: Job script not found: $JOB_SCRIPT"
     exit 1
 fi
 
-echo "Submitting joint jobs: script=$1 tasks=0-$((NUM_TASKS-1)) nepochs=$NEPOCHS"
+echo "Submitting joint jobs: script=$1 tasks=${START_FROM}-$((NUM_TASKS-1)) nepochs=$NEPOCHS"
 echo "Split: tasks 0-$((SPLIT1-1))=1job, ${SPLIT1}-$((SPLIT2-1))=2jobs, ${SPLIT2}+=4jobs"
 echo ""
 
 prev_jid=""
 
-for task in $(seq 0 $((NUM_TASKS - 1))); do
+for task in $(seq $START_FROM $((NUM_TASKS - 1))); do
 
     # Determine number of epoch-jobs for this task
     if [ "$task" -lt "$SPLIT1" ]; then
