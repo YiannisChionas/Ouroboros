@@ -24,7 +24,7 @@ python -u "${PROJECT_DIR}/src/pretrain_vit_hydra_v3.py" \
   --epochs      10 \
   --run-epochs  1 \
   --lr          1e-3 \
-  --batch-size  256 \
+  --batch-size  512 \
   --num-workers 2 \
   --T           3.0 \
   --output      "${RESULTS_DIR}/mlp_weights_v3.pth" \
