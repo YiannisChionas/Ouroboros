@@ -2,19 +2,6 @@
 
 ---
 
-## Πειράματα
-
-### 1. Γενίκευση feature drift σε άλλα datasets
-
-Τρέξε **LwF + Finetuning + Joint** για ViT-Base IN-1k και ViT-Base IN-21k στα:
-
-- [ ] Food-101 (10 tasks × 10 κλάσεις)
-- [ ] iNat200 (20 tasks × 10 κλάσεις)
-
-**Τι ψάχνουμε:** στο incremental setting το IN-21k να υστερεί του IN-1k, ενώ στο Joint να υπερτερεί — όπως στο CIFAR-100.
-
----
-
 ## Framework
 
 ### `requirements.txt` + `environment.yml`
