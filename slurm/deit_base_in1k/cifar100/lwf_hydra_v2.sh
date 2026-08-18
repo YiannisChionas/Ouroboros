@@ -16,6 +16,7 @@ CONFIG="${PROJECT_DIR}/configs/deit_base_in1k/cifar100/lwf_hydra_v2.json"
 
 source "${BASE_DIR}/miniconda3/etc/profile.d/conda.sh"
 conda activate "$CONDA_ENV"
+export TMPDIR=/tmp
 
 echo "START_TASK=$START_TASK STOP_TASK=$STOP_TASK"
 
