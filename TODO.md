@@ -4,6 +4,12 @@
 
 ## Framework
 
+### `export TMPDIR=/tmp` σε όλα τα sbatch scripts
+
+Τώρα υπάρχει μόνο στο `lwf_hydra_v2.sh` και `lwf_hydra_v3.sh`. Χωρίς αυτό ο PyTorch DataLoader δημιουργεί `pymp-*` dirs στο CWD (project root).
+
+- [ ] `find slurm/ -name "*.sh" | xargs sed -i 's/conda activate "\$CONDA_ENV"/conda activate "\$CONDA_ENV"\nexport TMPDIR=\/tmp/'`
+
 ### `requirements.txt` + `environment.yml`
 
 - [ ] Δημιουργία στη ρίζα του repo — αναφέρονται ήδη στο README με TODO marker
