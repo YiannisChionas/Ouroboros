@@ -47,7 +47,7 @@ exec python -u "${PROJECT_DIR}/src/pretrain_vit_hydra_full.py" \
   --epochs        300 \
   --batch-size    1024 \
   --micro-batch   128 \
-  --num-workers   2 \
+  --num-workers   3 \
   --eval-every    "${EVAL_EVERY:-10}" \
   --resume \
   ${EXTRA[@]+"${EXTRA[@]}"}

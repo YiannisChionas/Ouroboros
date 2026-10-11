@@ -44,8 +44,9 @@ TEACHERS = [
     ('regnety160', 'regnety_160.deit_in1k'),
     ('convnext_b', 'convnext_base.fb_in1k'),
     ('swin_b',     'swin_base_patch4_window7_224.ms_in1k'),
-    ('resnet101',  'resnet101.a1_in1k'),
-    ('resnet50',   'resnet50.a1_in1k'),
+    # torchvision v2 recipe (softmax CE); the timm a1 weights are BCE-trained -> logits not softmax-calibrated
+    ('resnet101',  'resnet101.tv2_in1k'),
+    ('resnet50',   'resnet50.tv2_in1k'),
 ]
 
 STOP = {'flag': False}
@@ -120,7 +121,8 @@ def build_teachers(device):
         for p in t.parameters():
             p.requires_grad = False
         teachers.append(t)
-        print(f'  teacher {short:<11} {name:<40} input={cfg["input_size"]}', flush=True)
+        print(f'  teacher {short:<11} {name:<40} train input={cfg["input_size"]} '
+              f'test input={cfg.get("test_input_size", cfg["input_size"])}', flush=True)
     return teachers
 
 
@@ -204,6 +206,38 @@ def benchmark(teachers, device, amp_dtype, micro_batches, n_steps=20):
             print(f'  teacher {short:<11} forward: {mb * n_steps / (time.time() - t0):7.1f} img/s', flush=True)
 
 
+@torch.no_grad()
+def teacher_stats(teachers, dataset, device, amp_dtype, T, micro_batch, num_workers, n_batches=20):
+    """Per-teacher softmax statistics on real val images (are the 5 KD targets comparable?).
+
+    entropy@T     mean entropy of softmax(logits / T), max = ln(1000) = 6.91
+    KD(uniform)   T^2 * KL(teacher_T || uniform) = T^2 * (ln 1000 - entropy@T): the KD loss
+                  of an untrained student with ~uniform output — starting point of each KD term
+    """
+    print(f'\n=== Teacher stats ({n_batches * micro_batch} val images, T={T}) ===', flush=True)
+    g = torch.Generator()
+    g.manual_seed(0)
+    loader = DataLoader(dataset, batch_size=micro_batch, num_workers=num_workers, pin_memory=True,
+                        sampler=torch.randperm(len(dataset), generator=g)[:n_batches * micro_batch].tolist())
+    stats = torch.zeros(len(teachers), 3)  # correct, entropy sum, max-logit sum
+    total = 0
+    for images, targets in loader:
+        images = images.to(device, non_blocking=True).contiguous(memory_format=torch.channels_last)
+        targets = targets.to(device, non_blocking=True)
+        with torch.autocast(device.type, dtype=amp_dtype):
+            logits = [t(images).float() for t in teachers]
+        for i, lg in enumerate(logits):
+            logp = F.log_softmax(lg / T, dim=1)
+            stats[i, 0] += (lg.argmax(1) == targets).sum().item()
+            stats[i, 1] += -(logp.exp() * logp).sum(1).sum().item()
+            stats[i, 2] += lg.max(1).values.sum().item()
+        total += targets.numel()
+    for (short, _), (correct, ent, maxlog) in zip(TEACHERS, stats.tolist()):
+        ent /= total
+        print(f'  {short:<11} top1={100 * correct / total:5.1f}%  entropy@T={ent:.3f}  '
+              f'KD(uniform)={T * T * (np.log(1000) - ent):6.3f}  mean max-logit={maxlog / total:6.2f}', flush=True)
+
+
 def benchmark_loader(dataset, micro_batch, num_workers, n_batches=40):
     print(f'\n=== Benchmark: dataloader ({num_workers} workers, train transforms) ===', flush=True)
     loader = DataLoader(dataset, batch_size=micro_batch, shuffle=True, num_workers=num_workers,
@@ -267,6 +301,8 @@ def main():
     train_ds, val_ds = build_datasets(args.data)
     print(f'train {len(train_ds)} images, val {len(val_ds)} images, {len(train_ds.classes)} classes', flush=True)
 
+    if args.benchmark:
+        teacher_stats(teachers, val_ds, device, amp_dtype, args.T, args.micro_batch, args.num_workers)
     if args.benchmark and device.type == 'cuda':
         benchmark(teachers, device, amp_dtype, [args.micro_batch, 2 * args.micro_batch])
         benchmark_loader(train_ds, args.micro_batch, args.num_workers)
