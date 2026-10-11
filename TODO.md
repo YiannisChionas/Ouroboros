@@ -2,6 +2,21 @@
 
 ---
 
+## vit-hydra pretraining (κύριος στόχος από 2026-10-11)
+
+- [ ] Email στους HPC admins για έγκριση πόρων (4×A100 yoda ή luke/anakin)
+- [ ] Έλεγχος στο HPC αν έτρεξε το `lwf_hydra_random` (control)
+- [ ] SLURM job (χωρίς GPU): εξαγωγή ImageNet parquet → ImageFolder στο `/var/local/storage/it219111/`
+- [ ] `src/networks/vit_hydra_tokens.py` — ViT-B με 1 cls + 5 dist tokens, 6 heads
+- [ ] `src/pretrain_vit_hydra_full.py` — DDP, bf16, DeiT-B recipe, 5 online teachers, loss 0.5/0.1×5, πλήρες resume ανά epoch
+- [ ] Debug/sanity runs τοπικά (4070 Ti)
+- [ ] Benchmark job (img/s student, teachers, dataloader) → πραγματικό κόστος
+- [ ] Κύριο run 300 epochs (chained 5h jobs) + περιοδικό backup checkpoints τοπικά
+- [ ] Ανάλυση ποικιλίας heads (cosine similarity / CKA στα features)
+- [ ] Γενίκευση lwf-hydra σε N tokens για CIL
+
+---
+
 ## Framework
 
 ### `export TMPDIR=/tmp` σε όλα τα sbatch scripts
