@@ -268,7 +268,7 @@ def main():
     parser.add_argument('--weight-decay',  type=float, default=0.05)
     parser.add_argument('--drop-path',     type=float, default=0.1)
     parser.add_argument('--repeats',       type=int,   default=3, help='repeated augmentation')
-    parser.add_argument('--T',             type=float, default=3.0)
+    parser.add_argument('--T',             type=float, default=1.0)
     parser.add_argument('--w-cls',         type=float, default=0.5)
     parser.add_argument('--w-kd',          type=float, default=0.1, help='weight of each teacher KD term')
     parser.add_argument('--num-workers',   type=int,   default=2)
