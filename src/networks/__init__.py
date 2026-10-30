@@ -4,6 +4,7 @@ from timm import models as timm_models
 from .deit_original import VisionTransformerDistilled, deit_small_distilled_patch16_224_cil, deit_base_distilled_patch16_224_cil
 from .vit_dist import VisionTransformerDistilledCIL, vit_small_patch16_224_dist, vit_base_patch16_224_dist, vit_base_patch16_224_dist_in1k
 from .vit_prompt import ViT_Prompt, vit_small_patch16_224_prompt, vit_base_patch16_224_prompt
+from .vit_hydra_tokens import VisionTransformerHydra, vit_hydra_base_patch16_224_cil
 
 # available torchvision models
 tvmodels = [
@@ -15,7 +16,7 @@ tvmodels = [
 timmmodels = ['vit_base_patch16_224.orig_in21k', 'vit_base_patch16_224.augreg_in21k', 'vit_base_patch16_224.augreg_in1k', 'vit_small_patch16_224.augreg_in1k', 'resnet50.a1_in1k','resnetv2_101x1_bit.goog_in21k']
 
 # DeiT / ViT-dist / ViT-prompt feature extractor overrides
-allmodels = tvmodels + timmmodels + ['deit_small_distilled_patch16_224_cil', 'deit_base_distilled_patch16_224_cil', 'vit_small_patch16_224_dist', 'vit_base_patch16_224_dist', 'vit_base_patch16_224_dist_in1k', 'vit_small_patch16_224_prompt', 'vit_base_patch16_224_prompt']
+allmodels = tvmodels + timmmodels + ['deit_small_distilled_patch16_224_cil', 'deit_base_distilled_patch16_224_cil', 'vit_small_patch16_224_dist', 'vit_base_patch16_224_dist', 'vit_base_patch16_224_dist_in1k', 'vit_small_patch16_224_prompt', 'vit_base_patch16_224_prompt', 'vit_hydra_base_patch16_224_cil']
 
 def set_model_head_var(model):
     # ResNet
@@ -33,6 +34,9 @@ def set_model_head_var(model):
         model.head_var = 'head'
     # ViT with prompt pool
     elif type(model) == ViT_Prompt:
+        model.head_var = 'head'
+    # vit-hydra (1 cls + N dist tokens)
+    elif type(model) == VisionTransformerHydra:
         model.head_var = 'head'
     else:
         raise ModuleNotFoundError

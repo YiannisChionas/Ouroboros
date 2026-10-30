@@ -14,6 +14,7 @@ from networks.distil_network import LLL_Net_Distilled
 from networks.distil_network_hydra import LLL_Net_Hydra
 from networks.distil_network_hydra_v2 import LLL_Net_Hydra_v2
 from networks.distil_network_hydra_v3 import LLL_Net_Hydra_v3
+from networks.distil_network_vit_hydra import LLL_Net_VitHydra
 from approach.incremental_learning import Incremental_Learning_Approach
 from networks import tvmodels, timmmodels, set_model_head_var
 from last_layer_analysis import last_layer_analysis
@@ -87,7 +88,9 @@ def train(args):
         test_loader = validation_loader
 
     utils.seed_everything(seed=args['seed'])
-    if args.get('hydra_v3', False):
+    if args.get('vit_hydra', False):
+        net = LLL_Net_VitHydra(init_model, args['approach_args'].get('backbone_weights'))
+    elif args.get('hydra_v3', False):
         net = LLL_Net_Hydra_v3(init_model, args['approach_args'].get('mlp_weights'))
     elif args.get('hydra_v2', False):
         net = LLL_Net_Hydra_v2(init_model, args['approach_args'].get('mlp_weights'))

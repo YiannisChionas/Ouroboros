@@ -16,7 +16,7 @@ from torch import nn as nn
 from timm.layers import resample_abs_pos_embed
 from timm.models.vision_transformer import VisionTransformer, trunc_normal_
 
-__all__ = ['VisionTransformerHydra', 'vit_hydra_base_patch16_224']
+__all__ = ['VisionTransformerHydra', 'vit_hydra_base_patch16_224', 'vit_hydra_base_patch16_224_cil']
 
 
 class VisionTransformerHydra(VisionTransformer):
@@ -102,3 +102,12 @@ def vit_hydra_base_patch16_224(num_dist_tokens=5, num_classes=1000, drop_path_ra
         img_size=224, patch_size=16, embed_dim=768, depth=12, num_heads=12,
         num_classes=num_classes, drop_path_rate=drop_path_rate,
         num_dist_tokens=num_dist_tokens, **kwargs)
+
+
+def vit_hydra_base_patch16_224_cil(pretrained=False, **kwargs):
+    """CIL backbone: ViT-Hydra B/16 without drop path (as deit_base_distilled_patch16_224_cil).
+
+    The pretrained vit-hydra weights are loaded by LLL_Net_VitHydra (approach_args.backbone_weights).
+    """
+    assert not pretrained, 'vit-hydra weights are loaded via approach_args.backbone_weights'
+    return vit_hydra_base_patch16_224(drop_path_rate=0.0, **kwargs)
