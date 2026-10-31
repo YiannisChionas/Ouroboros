@@ -11,20 +11,24 @@ class Appr(Incremental_Learning_Approach):
     Differences from lwf_hydra_v2:
       - old tasks: every head distils from its OWN head of the old model
         (cls <- old cls, dist_i <- old dist_i)
-      - current task: CE with ground truth on ALL heads (cls + every dist_i)
+      - current task: CE with ground truth on ALL heads (cls + every dist_i), see ce_heads
       - eval: cls head only (as lwf_dual / lwf_hydra_v2)
 
     Approach-specific args (approach_args in config):
-        lamb  (float, default 1.0) — distillation loss weight
-        T     (int,   default 2)   — softmax temperature
+        lamb      (float, default 1.0)       — distillation loss weight
+        T         (int,   default 2)         — softmax temperature
+        ce_heads  (str,   default "all_sum") — current-task CE: "all_sum" (sum over all heads),
+                                               "all_mean" (mean over all heads), "cls" (cls head only)
     """
 
     def __init__(self, args, model, logger=None, exemplars_dataset=None):
         super().__init__(args, model, logger, exemplars_dataset)
         self.model_old = None
         aargs = args.get('approach_args', {})
-        self.lamb = aargs.get('lamb', 1.0)
-        self.T    = aargs.get('T', 2)
+        self.lamb     = aargs.get('lamb', 1.0)
+        self.T        = aargs.get('T', 2)
+        self.ce_heads = aargs.get('ce_heads', 'all_sum')
+        assert self.ce_heads in ('all_sum', 'all_mean', 'cls')
 
     def post_train_process(self, t, trn_loader):
         self.model_old = deepcopy(self.model)
@@ -93,8 +97,11 @@ class Appr(Incremental_Learning_Approach):
                 loss += self.lamb * self.cross_entropy(
                     torch.cat(head[:t], dim=1), torch.cat(head_old[:t], dim=1), exp=1.0 / self.T)
 
-        # CE on current task — all heads
-        for head in all_heads:
-            loss += F.cross_entropy(head[t], targets - self.model.task_offset[t])
+        # CE on current task — heads selected by ce_heads
+        ce_heads = all_heads[:1] if self.ce_heads == 'cls' else all_heads
+        ce = sum(F.cross_entropy(head[t], targets - self.model.task_offset[t]) for head in ce_heads)
+        if self.ce_heads == 'all_mean':
+            ce = ce / len(ce_heads)
+        loss += ce
 
         return loss
