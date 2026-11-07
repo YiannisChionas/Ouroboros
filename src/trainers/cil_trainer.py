@@ -15,6 +15,7 @@ from networks.distil_network_hydra import LLL_Net_Hydra
 from networks.distil_network_hydra_v2 import LLL_Net_Hydra_v2
 from networks.distil_network_hydra_v3 import LLL_Net_Hydra_v3
 from networks.distil_network_vit_hydra import LLL_Net_VitHydra
+from networks.distil_network_cls_only import LLL_Net_Cls_Only
 from approach.incremental_learning import Incremental_Learning_Approach
 from networks import tvmodels, timmmodels, set_model_head_var
 from last_layer_analysis import last_layer_analysis
@@ -96,6 +97,8 @@ def train(args):
         net = LLL_Net_Hydra_v2(init_model, args['approach_args'].get('mlp_weights'))
     elif args.get('hydra', False):
         net = LLL_Net_Hydra(init_model, args['approach_args'].get('mlp_weights'))
+    elif args.get('cls_only', False):
+        net = LLL_Net_Cls_Only(init_model, remove_existing_head=False)
     elif args.get('distilled', False):
         net = LLL_Net_Distilled(init_model, remove_existing_head=False)
     else:
