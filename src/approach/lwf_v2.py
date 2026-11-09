@@ -1,3 +1,4 @@
+import timm.optim
 import torch
 import torch.nn.functional as F
 from copy import deepcopy
@@ -19,6 +20,19 @@ class Appr(Incremental_Learning_Approach):
         aargs = args.get('approach_args', {})
         self.lamb = aargs.get('lamb', 1.0)
         self.T    = aargs.get('T', 2)
+
+    def _get_optimizer(self):
+        """Same as the base optimizer, but passes nesterov only to SGD (Adam rejects it)."""
+        params = [p for p in self.model.parameters() if p.requires_grad]
+        extra = {'nesterov': False} if self.optimizer_name == 'sgd' else {}
+        return timm.optim.create_optimizer_v2(
+            params,
+            opt=self.optimizer_name,
+            lr=self.lr,
+            weight_decay=self.weight_decay,
+            momentum=self.momentum,
+            **extra,
+        )
 
     # ------------------------------------------------------------------
     # Training
