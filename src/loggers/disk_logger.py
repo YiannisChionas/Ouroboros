@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import json
 import torch
@@ -53,7 +54,16 @@ class Logger(ExperimentLogger):
                                     '{}_{}-{}.pdf'.format(name, iter, curtime.strftime("%Y-%m-%d-%H-%M-%S"))))
 
     def save_model(self, state_dict, task):
-        torch.save(state_dict, os.path.join(self.exp_path, "models", "task{}.ckpt".format(task)))
+        """Save task{task}.ckpt and keep only it: older task checkpoints are removed (disk quota).
+        Written to a temp file first, so a crash mid-save never leaves us without a valid checkpoint."""
+        models_dir = os.path.join(self.exp_path, "models")
+        path = os.path.join(models_dir, "task{}.ckpt".format(task))
+        torch.save(state_dict, path + ".tmp")
+        os.replace(path + ".tmp", path)
+        for fname in os.listdir(models_dir):
+            m = re.fullmatch(r"task(\d+)\.ckpt", fname)
+            if m and int(m.group(1)) < task:
+                os.remove(os.path.join(models_dir, fname))
 
     def __del__(self):
         self.raw_log_file.close()
