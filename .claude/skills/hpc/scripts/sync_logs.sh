@@ -7,7 +7,7 @@
 #
 # Mapping:
 #   {approach}_{dataset}_{backbone}  ->  logs/{backbone}/{dataset}/{approach}/
-#   (dataset anchors: cifar100, food101, inatm200, inat200, five_datasets)
+#   (dataset anchors: cifar100, food101, inatm200, inat500, inat200, five_datasets)
 #   no dataset in the name           ->  logs/analysis/{name}/ if it exists locally, else logs/_misc/{name}/
 #
 # Existing local files are not overwritten (--ignore-existing). Afterwards every local .out without a
@@ -31,7 +31,7 @@ fi
 
 local_dir() {
   local name="$1"
-  if [[ "$name" =~ ^(.+)_(cifar100|food101|inatm200|inat200|five_datasets)_(.+)$ ]]; then
+  if [[ "$name" =~ ^(.+)_(cifar100|food101|inatm200|inat500|inat200|five_datasets)_(.+)$ ]]; then
     echo "${REPO}/logs/${BASH_REMATCH[3]}/${BASH_REMATCH[2]}/${BASH_REMATCH[1]}"
   elif [ -d "${REPO}/logs/analysis/${name}" ]; then
     echo "${REPO}/logs/analysis/${name}"

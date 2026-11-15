@@ -77,9 +77,9 @@ Scripts του skill (τρέχουν **μόνο τοπικά**, `S=.claude/skill
 | HPC logs (μόνιμη πηγή αλήθειας, τα `.out` κρατιούνται πάντα) | `/home/it219111/experiments/Ouroboros/logs/` | flat: `{approach}_{dataset}_{backbone}/` |
 | Local logs | `Ouroboros/logs/` | `{backbone}/{dataset}/{approach}/` · χωρίς dataset στο όνομα → `logs/analysis/` ή `logs/_misc/` |
 | HPC results (προσωρινά: checkpoints, exemplars, per-task .txt) | `/home/it219111/git/Ouroboros/results/{network}/{dataset}/{approach}/10/` ή `experiment_path` του config | — |
-| Datasets στο HPC | `/home/it219111/git/data/{cifar100,food101,inat200,inatm200,...}` | — |
+| Datasets στο HPC | `/home/it219111/git/data/{cifar100,food101,inat200,inatm200,inat500,...}` | — |
 
-- Dataset anchors για το parsing του flat ονόματος: `cifar100`, `food101`, `inatm200`, `inat200`, `five_datasets`.
+- Dataset anchors για το parsing του flat ονόματος: `cifar100`, `food101`, `inatm200`, `inat500`, `inat200`, `five_datasets`.
   - `bic_cifar100_resnet50_in1k` → backbone=`resnet50_in1k`, dataset=`cifar100`, approach=`bic`
   - `lwf_dt_cos_v2_cifar100_deit_small_in1k` → backbone=`deit_small_in1k`, dataset=`cifar100`, approach=`lwf_dt_cos_v2`
 - Checkpoints: το `disk_logger.save_model` κρατά **μόνο το τελευταίο** `task{t}.ckpt` (atomic save, σβήνει τα παλιότερα). Το resume φορτώνει `task{start_task-1}.ckpt`.
@@ -161,4 +161,4 @@ Defaults SPLIT1=5, SPLIT2=8 (10-task datasets). inat200 (20 tasks): `... 20 90 1
     fi"
   ```
   Παράδειγμα: `slurm/deit_base_in1k/inatm200/lwf_dual_v9.sh`.
-- Datasets στο HPC: `inat200` (παλιό, πτυχιακή) και `inatm200` (iNatM-200, https://huggingface.co/datasets/YiannisChionas/iNatM-200 — ίδιες 200 κλάσεις/σειρά με το inat200, 74.578/100.000 κοινές εικόνες, 400/100 ανά κλάση).
+- Datasets στο HPC: `inat200` (παλιό, πτυχιακή) και `inatm200` (iNatM-200, https://huggingface.co/datasets/YiannisChionas/iNatM-200 — ίδιες 200 κλάσεις/σειρά με το inat200, 74.578/100.000 κοινές εικόνες, 400/100 ανά κλάση). `inat500` (iNat-500, https://huggingface.co/datasets/YiannisChionas/iNat-500 — 500 κλάσεις, 400/100 ανά κλάση, 250.000 εικόνες → 50 tasks των 10, download ≈ 10h = 3 jobs σε σειρά).
