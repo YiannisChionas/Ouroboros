@@ -30,7 +30,7 @@ Scripts του skill (τρέχουν **μόνο τοπικά**, `S=.claude/skill
 - `sbatch`, `squeue`, `sacct`, `scancel`, `scontrol show job`, `scontrol update job` (dependency/partition δικών μας jobs), `sinfo`, `scontrol show partition|node`, `sacctmgr show assoc`
 - `mkdir -p` για log dirs
 - `ls`, `tail`, `grep`, `head` σε συγκεκριμένα αρχεία (σύντομες, one-shot) — **όχι** `du`/`find` σε μεγάλα dirs (π.χ. datasets)
-- `rm` για logs/results με **λίστα που αποφασίστηκε τοπικά**
+- `rm` για logs/results με **λίστα που αποφασίστηκε τοπικά** — μόνο λίγα/μεγάλα αρχεία. Φάκελοι με χιλιάδες μικρά αρχεία (datasets, `.cache` του HF download) σβήνονται με **CPU SLURM job** στο obiwan (`sbatch --wrap='rm -rf ...'`), γιατί στο NFS παίρνουν δεκάδες λεπτά.
 - `rsync` HPC → local (τρέχει **από το local**)
 
 ### Απαγορεύεται στον login node
@@ -62,7 +62,7 @@ Scripts του skill (τρέχουν **μόνο τοπικά**, `S=.claude/skill
 | anakin(_low) / luke(_low) | hpc06 / hpc07 | 8×H200 / 4×H100 | 96 | ✗ | Μόνο `god-account` — ποτέ submit |
 
 ### Storage
-- `/home` (NFS, quota 500G) — code, conda envs, logs. Το `/home` ήταν ~82G στις 2026-11-10.
+- `/home` (NFS, **quota 200G από 2026-11-16**) — code, conda envs, logs. Το `quota`/`df` δεν δείχνουν το όριο· ο server μετρούσε >200G ενώ το `du` έβγαζε 115G. Σύμπτωμα υπέρβασης: `Disk quota exceeded` / `could not close .git/index.lock`, και jobs που αποτυγχάνουν σε δευτερόλεπτα με **άδεια** `.out`/`.err` (exit 1:0). Τότε jobs μέτρησης/καθαρισμού γράφουν output στο `/opt/storage/users/${USER}`.
 - `/opt/storage/datasets`, `/opt/storage/users/${USER}` — NFS, **αργά**.
 - `/var/local/storage/${USER}` — **γρήγορος τοπικός δίσκος του compute node** (quota 500G). Τα job scripts **αντιγράφουν** τα δεδομένα εκεί αν δεν υπάρχουν (με `flock`, βλ. §5) και διαβάζουν από εκεί. Διαγραφή όταν τελειώσουν τα πειράματα.
 - Κρατάμε μόνο ό,τι χρειάζεται. **Τα αρχεία μπορεί να διαγραφούν από τους admins χωρίς προειδοποίηση** → logs γίνονται rsync τοπικά, checkpoints μακριών runs (pretraining) αντιγράφονται τοπικά περιοδικά.
