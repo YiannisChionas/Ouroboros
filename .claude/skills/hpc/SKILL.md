@@ -101,6 +101,7 @@ Scripts του skill (τρέχουν **μόνο τοπικά**, `S=.claude/skill
 5. Αναφέρω στον χρήστη first/last job id κάθε αλυσίδας.
 
 ### Αλυσίδες
+- **Κανόνας: ΠΟΤΕ πολλές αλυσίδες να τρέχουν «racing».** Πάντα **2 σειρές (lanes)**, μία ανά slot· μέσα σε κάθε lane οι αλυσίδες τρέχουν η μία μετά την άλλη, ώστε να τελειώνουν και να βγαίνουν αποτελέσματα. Σύντομες πρώτα· ζευγάρια σύγκρισης (π.χ. v9/v10, λ6/λ10) σε διαφορετικές lanes για να τελειώνουν μαζί. Δέσιμο: το head κάθε αλυσίδας `afterany:<last job της προηγούμενης στη lane>` (με `general_serial.sh` ή `scontrol update jobid=<head> dependency=afterany:<last>`). Αν ήδη τρέχουν 2 lanes, νέα αλυσίδα μπαίνει στο τέλος μιας lane.
 - `bash slurm/general.sh <script> [NUM_TASKS] [START_FROM]` — 1 job ανά task, `afterok` μεταξύ τους. Resume: `START_FROM=k`.
 - `bash slurm/general_serial.sh <script> [NUM_TASKS] [START_FROM] [INITIAL_DEP]` — το 1ο job με `afterany:INITIAL_DEP`. **Μόνο όταν τρέχουν ήδη 2 approaches** και θέλω 3ο σε αναμονή (INITIAL_DEP = last job μιας lane). Τυπώνει `first_job=` / `last_job=`.
 - Μεμονωμένο job: `sbatch --export=ALL,START_TASK=0,STOP_TASK=1 slurm/<...>.sh`.
