@@ -18,7 +18,7 @@ from networks.distil_network_vit_hydra import LLL_Net_VitHydra
 from networks.distil_network_cls_only import LLL_Net_Cls_Only
 from approach.incremental_learning import Incremental_Learning_Approach
 from networks import tvmodels, timmmodels, set_model_head_var
-from last_layer_analysis import last_layer_analysis
+from last_layer_analysis_v2 import last_layer_analysis, task_calibration, calibration_figures
 
 
 def train(args):
@@ -169,6 +169,8 @@ def train(args):
         # Eval + save metrics only when all epochs for this task are done
         if is_last_epoch_job:
             _eval_task(task=task, approach=appr, test_loader=test_loader, logger=logger, metrics=metrics)
+            if args['task_calibration_analysis']:
+                task_calibration(appr, test_loader, task, total_tasks, logger.exp_path)
 
     if is_last_epoch_job:
         _save_metrics(task=task, results_path=args['results_path'], logger=logger, metrics=metrics,
@@ -184,6 +186,9 @@ def train(args):
                 f_w, f_b = figs
             logger.log_figure(name='weights_cls', iter=task, figure=f_w)
             logger.log_figure(name='bias_cls',    iter=task, figure=f_b)
+        if task == total_tasks - 1 and args['task_calibration_analysis']:
+            for name, fig in calibration_figures(logger.exp_path, task).items():
+                logger.log_figure(name=name, iter=task, figure=fig)
 
     appr.save_progress(logger.exp_path, task)
 
@@ -349,6 +354,7 @@ def _set_defaults(args: dict) -> None:
     args.setdefault('freeze_backbone', False)
     args.setdefault('eval_on_train', False)
     args.setdefault('last_layer_analysis', False)
+    args.setdefault('task_calibration_analysis', False)
     args.setdefault('approach_args', {})
     args.setdefault('exemplars_args', {})
 
