@@ -1,0 +1,11 @@
+# Local testing env (CPU / MPS), same package versions as the HPC env.
+#   conda env create --file environment.yml
+# On a CUDA 11.8 machine add `--extra-index-url https://download.pytorch.org/whl/cu118` to the pip section.
+name: ouroboros-test
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - -r requirements.txt

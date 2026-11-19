@@ -71,8 +71,6 @@ cd ouroboros
 <details>
   <summary>Optionally, create an environment to run the code (click to expand).</summary>
 
-  <!-- TODO: add requirements.txt and environment.yml -->
-
   ### Using a requirements file
   The library requirements of the code are detailed in [requirements.txt](requirements.txt). You can install them
   using pip with:
@@ -88,7 +86,7 @@ cd ouroboros
   ```
   conda env create --file environment.yml --name ouroboros
   ```
-  *Notice:* set the appropriate version of your CUDA driver for `cudatoolkit` in `environment.yml`.
+  *Notice:* the versions match our CUDA 11.8 cluster; on a CUDA machine add `--extra-index-url https://download.pytorch.org/whl/cu118` to the pip section of `environment.yml`.
 
   #### Environment activation/deactivation
   ```
