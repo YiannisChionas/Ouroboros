@@ -54,7 +54,7 @@ for name in $names; do
     fi
   done
 
-  n_out=$(ls "$dst"/*.out 2>/dev/null | wc -l | tr -d ' ')
+  n_out=$(find "$dst" -maxdepth 1 -name '*.out' | wc -l | tr -d ' ')
   n_inc=0
   for f in "$dst"/*.out; do [ -e "$f" ] && ! grep -q 'TAg Acc' "$f" && n_inc=$((n_inc + 1)); done
   echo "${name} -> ${dst#${REPO}/}  (.out: ${n_out}, without TAg Acc: ${n_inc})"
