@@ -62,9 +62,10 @@ Scripts του skill (τρέχουν **μόνο τοπικά**, `S=.claude/skill
 | anakin(_low) / luke(_low) | hpc06 / hpc07 | 8×H200 / 4×H100 | 96 | ✗ | Μόνο `god-account` — ποτέ submit |
 
 ### Storage
-- `/home` (NFS, **quota 200G από 2026-11-16**) — code, conda envs, logs. Το `quota`/`df` δεν δείχνουν το όριο· ο server μετρούσε >200G ενώ το `du` έβγαζε 115G. Σύμπτωμα υπέρβασης: `Disk quota exceeded` / `could not close .git/index.lock`, και jobs που αποτυγχάνουν σε δευτερόλεπτα με **άδεια** `.out`/`.err` (exit 1:0). Τότε jobs μέτρησης/καθαρισμού γράφουν output στο `/opt/storage/users/${USER}`.
-- `/opt/storage/datasets`, `/opt/storage/users/${USER}` — NFS, **αργά**.
-- `/var/local/storage/${USER}` — **γρήγορος τοπικός δίσκος του compute node** (quota 500G). Τα job scripts **αντιγράφουν** τα δεδομένα εκεί αν δεν υπάρχουν (με `flock`, βλ. §5) και διαβάζουν από εκεί. Διαγραφή όταν τελειώσουν τα πειράματα.
+- **Quota 200G από 2026-11-16 = `/home` + `/var/local/storage/${USER}` όλων των compute nodes μαζί** (mail admins 2026-11-19). Το `quota`/`df` δεν δείχνουν το όριο· γι' αυτό ο server μετρούσε >200G ενώ το `du` του /home έβγαζε 115G (ImageNet ~150G στο hpc02). Το `/var/local` ενός node μετριέται μόνο με job σε εκείνο το partition (π.χ. `sbatch -p yoda ... --wrap='du -sh /var/local/storage/it219111/*'`).
+- `/home` (NFS) — code, conda envs, logs, results. Σύμπτωμα υπέρβασης: `Disk quota exceeded` / `could not close .git/index.lock`, και jobs που αποτυγχάνουν σε δευτερόλεπτα με **άδεια** `.out`/`.err` (exit 1:0). Τότε jobs μέτρησης/καθαρισμού γράφουν output στο `/opt/storage/users/${USER}`.
+- `/opt/storage/datasets`, `/opt/storage/users/${USER}` — NFS, **αργά**, εκτός quota. Εδώ η **πηγή των datasets** (`/opt/storage/users/it219111/data/<name>`): τα jobs τη διαβάζουν μόνο για να γεμίσουν το αντίγραφο στο `/var/local` όταν λείπει.
+- `/var/local/storage/${USER}` — **γρήγορος τοπικός δίσκος του compute node** (μετράει στο quota των 200G). Τα job scripts **αντιγράφουν** τα δεδομένα εκεί αν δεν υπάρχουν (με `flock`, βλ. §5) και διαβάζουν από εκεί. Διαγραφή όταν τελειώσουν τα πειράματα.
 - Κρατάμε μόνο ό,τι χρειάζεται. **Τα αρχεία μπορεί να διαγραφούν από τους admins χωρίς προειδοποίηση** → logs γίνονται rsync τοπικά, checkpoints μακριών runs (pretraining) αντιγράφονται τοπικά περιοδικά.
 - **ΠΟΤΕ** μη σβήσεις `results/pretraining/vit_hydra_full/vit_hydra_final.pth`.
 
@@ -77,7 +78,7 @@ Scripts του skill (τρέχουν **μόνο τοπικά**, `S=.claude/skill
 | HPC logs (μόνιμη πηγή αλήθειας, τα `.out` κρατιούνται πάντα) | `/home/it219111/experiments/Ouroboros/logs/` | flat: `{approach}_{dataset}_{backbone}/` |
 | Local logs | `Ouroboros/logs/` | `{backbone}/{dataset}/{approach}/` · χωρίς dataset στο όνομα → `logs/analysis/` ή `logs/_misc/` |
 | HPC results (προσωρινά: checkpoints, exemplars, per-task .txt) | `/home/it219111/git/Ouroboros/results/{network}/{dataset}/{approach}/10/` ή `experiment_path` του config | — |
-| Datasets στο HPC | `/home/it219111/git/data/{cifar100,food101,inat200,inatm200,inat500,...}` | — |
+| Datasets στο HPC (πηγή) | `/opt/storage/users/it219111/data/<name>` (δικά μας), `/opt/storage/datasets/<name>` (μεγάλα δημόσια) — βλ. §5 πολιτική. `cifar100` (339M) ακόμα στο `/home/it219111/git/data` | — |
 
 - Dataset anchors για το parsing του flat ονόματος: `cifar100`, `food101`, `inatm200`, `inat500`, `inat200`, `five_datasets`.
   - `bic_cifar100_resnet50_in1k` → backbone=`resnet50_in1k`, dataset=`cifar100`, approach=`bic`
@@ -148,12 +149,29 @@ Defaults SPLIT1=5, SPLIT2=8 (10-task datasets). inat200 (20 tasks): `... 20 90 1
 
 ## 5. Δεδομένα / νέο dataset
 
-- Download/extraction = **CPU SLURM job στο obiwan** (χωρίς `--gres`, 4 CPUs, 8G), resumable. Παράδειγμα: `slurm/data/download_inatm200.sh` (`hf download ... --local-dir /home/it219111/git/data/<name>`, στο τέλος ελέγχει ότι υπάρχουν όλα τα αρχεία των `train.txt`/`test.txt`).
+### Πολιτική datasets (από 2026-11-19)
+
+Quota **200G = `/home` + `/var/local/storage/${USER}` όλων των κόμβων μαζί**. Το `/opt/storage` είναι εκτός (mail admins 2026-11-19, οδηγός: `/opt/storage/datasets` «for dataset storage»).
+
+| Ρόλος | Πού | Μετράει στο quota | Κανόνας |
+|---|---|---|---|
+| **Πηγή** (μόνιμη, ένα αντίγραφο) | `/opt/storage/datasets/<name>`: μεγάλα δημόσια datasets (π.χ. ImageNet parquet) · `/opt/storage/users/it219111/data/<name>`: δικά μας (iNatM-200, iNat-500, ...) | όχι | Downloads γράφουν **απευθείας εδώ**. Αργό NFS, διαβάζεται μόνο για να γεμίσει το αντίγραφο εργασίας |
+| **Αντίγραφο εργασίας** | `/var/local/storage/it219111/<name>` στον κόμβο (hpc02 για yoda) | **ναι** | Το γεμίζει το job (flock + `.complete`, παρακάτω). Μόνο datasets **ενεργών** πειραμάτων· σβήνεται όταν τελειώνουν (job στο partition του κόμβου, ρωτάω πριν) |
+| **Παράγωγες μορφές** (π.χ. ImageFolder από parquet) | μόνο στο αντίγραφο εργασίας | ναι | **Δεν** κρατιούνται ως δεύτερο μόνιμο αντίγραφο· ξαναβγαίνουν από την πηγή με job (`src/extract_imagenet_parquet.py`) |
+| `/home` | — | ναι | **Ποτέ** datasets (μόνο code, envs, logs, results) |
+
+- Πριν μπει νέο μεγάλο dataset στον κόμβο: μέτρηση (`sbatch -p yoda --cpus-per-task=1 --mem=1G --time=00:20:00 --output=/opt/storage/users/it219111/%x-%j.out --wrap='du -sh /var/local/storage/it219111/*'`) + `du` του /home → πρέπει να χωράει στα 200G μαζί με ό,τι τρέχει.
+- Jobs χωρίς GPU που πρέπει να τρέξουν ενώ τρέχουν οι lanes (μέτρηση, καθαρισμός, αντιγραφή): μπαίνουν **μέσα σε μια lane** — το επόμενο job της lane παίρνει επιπλέον `afterany:<job>` (αλλιώς, με MaxJobs 2 και μικρότερη προτεραιότητα, δεν ξεκινούν ποτέ).
+- Απογραφή (2026-11-19): ImageNet-1k parquet ~155G στο `/opt/storage/datasets/imagenet1k/data` · iNatM-200 ~14G, iNat-500 ~34G → μεταφορά από `/home/git/data` στο `/opt/storage/users/it219111/data` (job `slurm/data/copy_data_to_opt.sh`)· αντίγραφα εργασίας inatm200 / inat500 στο hpc02.
+
+### Download / νέο dataset
+
+- Download/extraction = **CPU SLURM job στο obiwan** (χωρίς `--gres`, 4 CPUs, 8G), resumable, με προορισμό την **πηγή** στο `/opt/storage` (βλ. πολιτική). Παράδειγμα: `slurm/data/download_inatm200.sh` (`hf download ... --local-dir <πηγή>/<name>`, στο τέλος ελέγχει ότι υπάρχουν όλα τα αρχεία των `train.txt`/`test.txt`).
 - Το HF download κατεβάζει ~7 αρχεία/s (100k εικόνες ≈ 4h). Αν μπορεί να ξεπεράσει τις 5h: δεύτερο download job με `afterany` στο πρώτο, και τα training chains `afterok` στο **δεύτερο**.
 - Format που διαβάζει ο loader (generic branch του `get_dataset`): `train.txt` / `test.txt` με `<relative_path> <class_id>` και `classes.txt`, relative στο `data_path`. Το όνομα του dataset δεν έχει ειδική μεταχείριση στον κώδικα — χρησιμοποιείται στα results paths και τα job names.
 - Τα training scripts αντιγράφουν τα δεδομένα στον τοπικό δίσκο του κόμβου μία φορά (το config έχει `"data_path": "/var/local/storage/it219111/<name>"`):
   ```bash
-  SRC_DATA="${BASE_DIR}/git/data/<name>"
+  SRC_DATA="/opt/storage/users/${USER}/data/<name>"   # πηγή (εκτός quota)
   LOCAL_DATA="/var/local/storage/${USER}/<name>"
   mkdir -p "/var/local/storage/${USER}"
   flock "/var/local/storage/${USER}/<name>.lock" bash -c "
@@ -162,4 +180,4 @@ Defaults SPLIT1=5, SPLIT2=8 (10-task datasets). inat200 (20 tasks): `... 20 90 1
     fi"
   ```
   Παράδειγμα: `slurm/deit_base_in1k/inatm200/lwf_dual_v9.sh`.
-- Datasets στο HPC: `inat200` (παλιό, πτυχιακή) και `inatm200` (iNatM-200, https://huggingface.co/datasets/YiannisChionas/iNatM-200 — ίδιες 200 κλάσεις/σειρά με το inat200, 74.578/100.000 κοινές εικόνες, 400/100 ανά κλάση). `inat500` (iNat-500, https://huggingface.co/datasets/YiannisChionas/iNat-500 — 500 κλάσεις, 400/100 ανά κλάση, 250.000 εικόνες → 50 tasks των 10, download ≈ 10h = 3 jobs σε σειρά).
+- Datasets: `inat200` (παλιό, πτυχιακή — **σβήστηκε 2026-11-16**, ξανά από HF αν χρειαστεί) και `inatm200` (iNatM-200, https://huggingface.co/datasets/YiannisChionas/iNatM-200 — ίδιες 200 κλάσεις/σειρά με το inat200, 74.578/100.000 κοινές εικόνες, 400/100 ανά κλάση). `inat500` (iNat-500, https://huggingface.co/datasets/YiannisChionas/iNat-500 — 500 κλάσεις, 400/100 ανά κλάση, 250.000 εικόνες → 50 tasks των 10, download ≈ 10h = 3 jobs σε σειρά).
