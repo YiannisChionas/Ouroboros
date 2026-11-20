@@ -16,7 +16,7 @@ CONDA_ENV="test_env"
 CONFIG="${PROJECT_DIR}/configs/deit_base_in1k/inat200/lwf_dual_v9.json"
 
 # Copy inat200 to the node's fast local disk once (cluster guide); the lock keeps parallel jobs from copying at the same time.
-SRC_DATA="${BASE_DIR}/git/data/inat200"
+SRC_DATA="/opt/storage/users/${USER}/data/inat200"
 LOCAL_DATA="/var/local/storage/${USER}/inat200"
 mkdir -p "/var/local/storage/${USER}"
 flock "/var/local/storage/${USER}/inat200.lock" bash -c "

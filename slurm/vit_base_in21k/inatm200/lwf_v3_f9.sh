@@ -16,7 +16,7 @@ CONDA_ENV="test_env"
 CONFIG="${PROJECT_DIR}/configs/vit_base_in21k/inatm200/lwf_v3_f9.json"
 
 # Copy inatm200 to the node's fast local disk once (cluster guide); the lock keeps parallel jobs from copying at the same time.
-SRC_DATA="${BASE_DIR}/git/data/inatm200"
+SRC_DATA="/opt/storage/users/${USER}/data/inatm200"
 LOCAL_DATA="/var/local/storage/${USER}/inatm200"
 mkdir -p "/var/local/storage/${USER}"
 flock "/var/local/storage/${USER}/inatm200.lock" bash -c "

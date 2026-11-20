@@ -9,7 +9,7 @@
 #SBATCH --error=/home/it219111/experiments/Ouroboros/logs/%x/%x-%j.err
 
 # CPU-only job (no --gres): download iNat-500 from the Hugging Face Hub
-# (https://huggingface.co/datasets/YiannisChionas/iNat-500) to /home/it219111/git/data/inat500.
+# (https://huggingface.co/datasets/YiannisChionas/iNat-500) to /opt/storage/users/it219111/data/inat500.
 # Resumable: files already downloaded are skipped, so re-submit if it hits the time limit or a rate limit.
 # Training jobs copy this folder to the node's local disk before reading it.
 
@@ -17,7 +17,7 @@ set -euo pipefail
 
 BASE_DIR="/home/it219111"
 CONDA_ENV="test_env"
-DST="${BASE_DIR}/git/data/inat500"
+DST="/opt/storage/users/${USER}/data/inat500"
 
 source "${BASE_DIR}/miniconda3/etc/profile.d/conda.sh"
 conda activate "$CONDA_ENV"
