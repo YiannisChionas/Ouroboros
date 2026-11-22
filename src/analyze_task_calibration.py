@@ -24,6 +24,7 @@ import numpy as np
 import torch
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import utils  # noqa: E402
 from datasets.data_loader import get_loaders  # noqa: E402
 from last_layer_analysis_v2 import task_calibration, _head_logits  # noqa: E402
 from networks import tvmodels, timmmodels, set_model_head_var  # noqa: E402
@@ -73,6 +74,8 @@ def main():
     device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
     task = int(re.search(r'task(\d+)\.ckpt$', a.ckpt).group(1))
 
+    # Same seed right before get_loaders as cil_trainer.train(): the class order is shuffled with it
+    utils.seed_everything(seed=args['seed'])
     _, _, test_loader, classes_per_task = get_loaders(args)
     total_tasks = len(classes_per_task)
     if a.max_batches:
