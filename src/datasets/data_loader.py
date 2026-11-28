@@ -83,6 +83,7 @@ def get_loaders(args: dict):
     flip               = args.get('flip',               True)
     normalize          = args.get('normalize',          'in1k')
     extend_channel     = args.get('extend_channel',     None)
+    class_order        = args.get('class_order',        None)  # list of original class ids, in task order (no shuffle)
 
     normalize = _NORMALIZE_PRESETS[normalize]
 
@@ -106,7 +107,8 @@ def get_loaders(args: dict):
                                                                                     classes_first_task = classes_first_task,
                                                                                     validation = validation,
                                                                                     train_transformation = train_transform,
-                                                                                    test_transformation = test_transform
+                                                                                    test_transformation = test_transform,
+                                                                                    class_order = class_order
                                                                                     )
 
     # loaders
